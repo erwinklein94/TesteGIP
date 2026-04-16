@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Guia do Inspetor Padrão - RUMO</title>
+    
+    <!-- CSS ficará em arquivo separado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-screen">
+        <div class="login-card">
+            <img src="https://www.rumolog.com/wp-content/themes/rumo/assets/img/home/logo.svg" alt="Rumo" class="login-logo">
+            <div class="login-subtitle">Coordenação de Qualidade e Homologação dos Materiais de Via Permanente</div>
+            <p class="bold" style="margin-bottom:20px">Guia do Inspetor Padrão</p>
+            <div class="form-group"><input type="password" id="user-password" placeholder="Digite a senha de acesso"></div>
+            <button class="btn-analisar" onclick="validarAcesso()">ENTRAR</button>
+            <p id="error-msg" class="error-msg">Senha incorreta</p>
+        </div>
+    </div>
+
+    <!-- Modal Ajuda Visual -->
+    <div id="modal-ajuda-visual" class="modal-ajuda escondido">
+        <div class="modal-ajuda-content">
+            <span class="modal-ajuda-close" onclick="fecharAjuda()">&times;</span>
+            <h3 id="modal-titulo" style="color:var(--text-title);margin-bottom:5px">Título</h3>
+            <p id="modal-desc" style="font-size:.85rem;color:var(--text-muted)">Descrição do defeito.</p>
+            <div class="modal-img-placeholder">📷 <br> [Espaço para foto]</div>
+            <button class="btn-analisar" style="padding:10px" onclick="fecharAjuda()">Entendi</button>
+        </div>
+    </div>
+
+    <!-- Modal Câmera -->
+    <div id="camera-modal" class="escondido">
+        <div class="camera-header">
+            <button onclick="fecharCamera()">❌ Cancelar</button>
+            <span style="color:#fff;font-weight:bold;text-shadow:1px 1px 3px #000">Evidência de Inspeção</span>
+        </div>
+        <div class="video-container">
+            <video id="video-preview" autoplay playsinline></video>
+            <img id="foto-capturada" class="escondido" alt="Laudo Final">
+            <div class="overlay-texto" id="overlay-texto-visual"></div>
+            <canvas id="canvas-render" style="display:none"></canvas>
+        </div>
+        <div class="camera-controls" id="controles-camera"><button class="btn-capturar" onclick="tirarFoto()"></button></div>
+        <div class="camera-controls escondido" id="controles-pos-captura">
+            <div class="botoes-pos-captura">
+                <button class="btn-secundario" onclick="retomarCamera()">🔄 Refazer</button>
+                <button class="btn-secundario" style="background:#0277bd" onclick="baixarFotoCarimbada()">⬇️ Salvar</button>
+                <button class="btn-secundario" style="background:#25D366" onclick="compartilharFotoCarimbada()">📲 Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout Principal -->
+    <div id="main-layout">
+        <aside id="sidebar">
+            <div class="sidebar-top">
+                <img src="https://www.rumolog.com/wp-content/themes/rumo/assets/img/home/logo.svg" alt="Rumo" class="sidebar-logo">
+                <div class="sidebar-subtitle">Coordenação de Qualidade e Homologação dos Materiais de Via Permanente</div>
+                <div class="menu-header">Guia do Inspetor Padrão</div>
+                <div class="menu-item" onclick="navegar(this,'sec-amv')">AMV & Componentes</div>
+                <div class="menu-item" onclick="navegar(this,'sec-brita')">Brita</div>
+                <div class="menu-item" onclick="navegar(this,'sec-concreto')">Dormente de Concreto</div>
+                <div class="menu-item" onclick="navegar(this,'sec-madeira')">Dormente de Madeira</div>
+                <div class="menu-item" onclick="navegar(this,'sec-sub')">Subcomponentes</div>
+                <div style="border-top:1px solid rgba(255,255,255,.2);margin:15px 25px;box-shadow:0 1px 0 rgba(0,0,0,.5)"></div>
+                <div class="menu-item active" onclick="navegar(this,'sec-report')">📊 Report Semanal</div>
+            </div>
+            <div class="sidebar-bottom">
+                <button onclick="fazerLogout()" class="logout-btn">🚪 Sair do Sistema</button>
+                <button onclick="document.body.classList.toggle('dark')" class="dark-toggle">
+                    <span class="icon-moon">🌙</span><span class="icon-sun">☀️</span>
+                </button>
+                <div class="sidebar-credit">Desenvolvido por Erwin Klein</div>
+            </div>
+        </aside>
+
+        <main>
+            <button id="toggle-sidebar-btn" onclick="toggleSidebar()">☰</button>
+
+            <!-- Todas as seções de conteúdo -->
+            <section id="sec-report" class="content-section active"> ... (todo o conteúdo da seção report) ... </section>
+            <section id="sec-amv" class="content-section"> ... (todo o conteúdo da seção AMV) ... </section>
+            <section id="sec-brita" class="content-section"> ... (todo o conteúdo da seção Brita) ... </section>
+            <section id="sec-concreto" class="content-section"> ... (todo o conteúdo da seção Concreto) ... </section>
+            <section id="sec-madeira" class="content-section"> ... (todo o conteúdo da seção Madeira) ... </section>
+            <section id="sec-sub" class="content-section"> ... (todo o conteúdo da seção Subcomponentes) ... </section>
+        </main>
+    </div>
+
+    <!-- JavaScript ficará em arquivo separado -->
+    <script src="script.js"></script>
+</body>
+</html>
