@@ -1,223 +1,307 @@
-// script.js - Guia do Inspetor Padrão - RUMO
+// === FUNÇÕES AUXILIARES ===
+function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function hideAll(selector) { document.querySelectorAll(selector).forEach(el => el.classList.add('escondido')); }
+function showEl(id, type = 'block') { const el = document.getElementById(id); if(el) { el.classList.remove('escondido'); el.style.display = type; } }
+function hideEl(id) { const el = document.getElementById(id); if(el) { el.classList.add('escondido'); } }
 
-// === HELPERS ===
-const $ = id => document.getElementById(id);
-const V = id => parseFloat($(id).value) || 0;
-
-function hideAll(s) {
-    document.querySelectorAll(s).forEach(e => e.classList.add('escondido'));
-}
-
-function showEl(id, t = 'block') {
-    const e = $(id);
-    if (e) {
-        e.classList.remove('escondido');
-        e.style.display = t;
-    }
-}
-
-function hideEl(id) {
-    const e = $(id);
-    if (e) e.classList.add('escondido');
-}
-
-// === AUTH & NAV ===
+// === AUTENTICAÇÃO E NAVEGAÇÃO ===
 function validarAcesso() {
-    if ($('user-password').value.trim() === '1272') {
-        hideEl('login-screen');
-        showEl('main-layout', 'flex');
-        if (innerWidth <= 768) {
-            $('sidebar').classList.add('hidden');
-            showEl('toggle-sidebar-btn', 'flex');
-        }
-    } else {
-        showEl('error-msg');
-    }
+    if (document.getElementById('user-password').value.trim() === '1272') {
+        hideEl('login-screen'); showEl('main-layout', 'flex');
+        if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.add('hidden'); showEl('toggle-sidebar-btn', 'flex'); }
+    } else { showEl('error-msg'); }
 }
 
-function fazerLogout() {
+function fazerLogout() { 
     if (confirm("Deseja realmente sair e limpar os dados locais?")) {
         localStorage.removeItem('rumoInspeccaoDados');
-        location.reload();
+        window.location.reload();
     }
 }
 
-function navegar(el, sec) {
-    document.querySelectorAll('.content-section, .menu-item').forEach(e => e.classList.remove('active'));
-    $(sec).classList.add('active');
-    el.classList.add('active');
-    if (innerWidth <= 768) {
-        $('sidebar').classList.add('hidden');
-        showEl('toggle-sidebar-btn', 'flex');
-    }
+function navegar(elemento, idSecao) {
+    document.querySelectorAll('.content-section, .menu-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(idSecao).classList.add('active');
+    elemento.classList.add('active');
+    if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.add('hidden'); showEl('toggle-sidebar-btn', 'flex'); }
 }
+function toggleSidebar() { document.getElementById('sidebar').classList.remove('hidden'); hideEl('toggle-sidebar-btn'); }
 
-function toggleSidebar() {
-    $('sidebar').classList.remove('hidden');
-    hideEl('toggle-sidebar-btn');
-}
-
-// === REPORT GENERATORS ===
-function mkStat(label, val, cls = '') {
-    return `<div class="stat-card"><div class="stat-label">${label}</div><div class="stat-value${cls ? ' ' + cls : ''}">${val}</div></div>`;
-}
-
-function mkStats(items) {
-    return '<div class="dashboard-grid">' + items.map(i => mkStat(i[0], i[1], i[2] || '')).join('') + '</div>';
-}
-
-function mkChart(title, bars) {
-    let h = `<div class="chart-container"><h3 class="ct">${title}</h3>`;
-    bars.forEach(b => {
-        h += `<div class="chart-bar-row"><div class="chart-label">${b.l}</div><div class="chart-bar-bg">`;
-        if (b.segs) {
-            b.segs.forEach((seg, i, a) => {
-                const r = i === 0 ? '8px 0 0 8px' : i === a.length - 1 ? '0 8px 8px 0' : '0';
-                h += `<div class="chart-bar-fill ${seg[1]}" style="width:${seg[0]};float:left;border-radius:${r}"></div>`;
-            });
-        } else {
-            h += `<div class="chart-bar-fill${b.c ? ' ' + b.c : ''}" style="width:${b.w}"></div>`;
-        }
-        h += `</div><div class="chart-value"${b.s ? ' style="' + b.s + '"' : ''}>${b.v}</div></div>`;
-    });
-    return h + '</div>';
-}
-
-function B(l, w, v, c, s) {
-    return { l, w, v, c: c || '', s: s || '' };
-}
-
-function BM(l, segs, v, s) {
-    return { l, segs, v, s: s || '' };
-}
-
-const R = {};
-
-// SEMANA 15
-R["15"] = {
-    amv: () => mkStats([["Peças Inspecionadas", "11"], ["Solicitação de Ajustes", "9", "warning"], ["Reprovadas", "0", "danger"], ["Aderência de Inspeção", "100%", "success"]]) +
-        mkChart("Peças Inspecionadas por Fornecedor", [B("Ibrafer", "81%", "9"), B("BR Parts", "19%", "2")]),
-
-    concreto: () => mkStats([["Total Fabricado", "3687"], ["Aprovados", "3626", "success"], ["Reprovados", "61", "danger"], ["Tx Aprovação (Sem. 15)", "95.3%", "success"]]) +
-        mkChart("Reprovas no Detalhado (Cavan)", [B("Vazios", "67.2%", "41", "danger"), B("Outros", "18%", "11", "danger"), B("Trincas", "11.4%", "7", "danger"), B("Quebras / USP", "3.2%", "2", "danger")]),
-
-    madeira: () => mkStats([["Inspecionados", "1365"], ["Aprovados", "1294", "success"], ["Reprovados", "71", "danger"], ["Tx Aprovação (Sem. 15)", "95%", "success"]]) +
-        mkChart("Peças Reprovadas por Fornecedor", [B("Pandolfi Madeiras", "67.6%", "48", "danger"), B("Tres Guri", "32.4%", "23", "danger")]),
-
-    lastro: () => mkStats([["Ensaios Realizados", "52"], ["Ensaios Aprovados", "48", "success"], ["Reprovados", "4", "danger"], ["Tx Aprovação (Sem. 15)", "92%", "success"]]) +
-        mkChart("Ensaios por Tipo (Aprovados vs Reprovados)", [BM("Granulometria", [["92.3%", "success"], ["7.7%", "danger"]], "39"), BM("F. Fragmentos", [["92.3%", "success"], ["7.7%", "danger"]], "13")]),
-
-    sub: () => mkStats([["Total de Registros (RNCs)", "20"], ["Concluídos", "17", "success"], ["Em Andamento", "1", "warning"], ["Cancelados", "2", "danger"]]) +
-        mkChart("Registros por Fornecedor (Top 1)", [B("Pandolfi", "100%", "19", "warning")]),
-
-    rnc: () => R["15"].sub()
-};
-
-// SEMANA 14
-R["14"] = {
-    amv: () => mkStats([["Peças Inspecionadas", "40"], ["Solicitação de Ajustes", "7", "warning"], ["Reprovadas", "0", "danger"], ["Aderência de Inspeção", "100%", "success"]]) +
-        mkChart("Peças Inspecionadas por Fornecedor", [B("BR Parts", "100%", "40")]),
-
-    concreto: () => mkStats([["Total Fabricado", "4660"], ["Aprovados", "4452", "success"], ["Reprovados", "208", "danger"], ["Tx Aprovação (Sem. 14)", "95.54%", "success"]]) +
-        mkChart("Reprovas no Detalhado (Cavan)", [B("Trincas", "87.5%", "182", "danger"), B("Quebras", "4.8%", "10", "danger"), B("Vazios", "4.8%", "10", "danger"), B("Ombreiras / Outros", "2.8%", "6", "danger")]),
-
-    madeira: () => mkStats([["Inspecionados", "1782"], ["Aprovados", "1476", "success"], ["Reprovados", "306", "danger"], ["Tx Aprovação (Sem. 14)", "86%", "warning"]]) +
-        mkChart("Peças Reprovadas por Fornecedor", [B("Pandolfi", "69.6%", "213", "danger"), B("Larssen", "20.6%", "63", "danger"), B("Ricken", "6.2%", "19", "danger"), B("Tres Guri", "3.6%", "11", "danger")]),
-
-    lastro: () => mkStats([["Ensaios Realizados", "24"], ["Ensaios Aprovados", "24", "success"], ["Reprovados", "0", "danger"], ["Tx Aprovação (Sem. 14)", "100%", "success"]]) +
-        mkChart("Ensaios por Tipo", [B("Granulometria", "100%", "18", "success"), B("F. Fragmentos", "100%", "6", "success")]),
-
-    sub: () => {
-        const s = mkStats([["Total de Registros (RNCs)", "78"], ["Concluídos", "63", "success"], ["Em Andamento", "10", "warning"], ["Cancelados", "5", "danger"]]);
-        return s + mkChart("Registros Abertos por Fornecedor (Top 5)", [
-            B("Pandolfi", "100%", "17", "warning"),
-            B("Larssen", "88%", "15", "warning"),
-            B("Ricken", "64%", "11", "warning"),
-            B("F. Garcia", "47%", "8", "warning"),
-            B("Tratanorte", "29%", "5", "warning")
-        ]);
+// === REPORT SEMANAL (DADOS DOS DASHBOARDS) ===
+const dadosReport = {
+    "15": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">11</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">9</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ibrafer</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 81%;"></div></div>
+                    <div class="chart-value">9</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 19%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">3687</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">3626</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">61</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">95.3%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 67.2%;"></div></div>
+                    <div class="chart-value">41</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Outros</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 18%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Trincas</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 11.4%;"></div></div>
+                    <div class="chart-value">7</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Quebras / USP</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 3.2%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1365</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">1294</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">71</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">95%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi Madeiras</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 67.6%;"></div></div>
+                    <div class="chart-value">48</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tres Guri</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 32.4%;"></div></div>
+                    <div class="chart-value">23</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">52</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">48</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">4</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">92%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 92.3%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 7.7%; float: left; border-radius: 0 8px 8px 0;"></div>
+                    </div>
+                    <div class="chart-value">39</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 92.3%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 7.7%; float: left; border-radius: 0 8px 8px 0;"></div>
+                    </div>
+                    <div class="chart-value">13</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">20</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">17</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">1</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">2</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">19</div>
+                </div>
+            </div>
+        `
     },
-    rnc: () => R["14"].sub()
-};
-
-// SEMANA 13
-R["13"] = {
-    amv: () => mkStats([["Peças Inspecionadas", "52"], ["Solicitação de Ajustes", "22", "warning"], ["Reprovadas", "0", "danger"], ["Aderência de Inspeção", "98%", "success"]]) +
-        mkChart("Peças Inspecionadas por Fornecedor", [B("BR Parts", "71.1%", "37"), B("Ibrafer", "15.4%", "8"), B("Hewitt", "13.5%", "7")]) +
-        mkChart("Solicitação de Ajustes por Fornecedor", [B("Ibrafer", "100%", "9", "warning"), B("Hewitt", "77.7%", "7", "warning"), B("BR Parts", "66.7%", "6", "warning")]) +
-        mkChart("Peças Inspecionadas por Mês (2026)", [B("Janeiro", "100%", "301"), B("Fevereiro", "17.3%", "52"), B("Março", "44.5%", "134")]),
-
-    concreto: () => mkStats([["Total Fabricado (Acum.)", "56.483"], ["Aprovados (Acum.)", "56.288", "success"], ["Reprovados (Acum.)", "195", "danger"], ["Tx Aprovação (Sem. 13)", "99,3%", "success"]]) +
-        mkChart("Aprovação Semanal", [B("Sem. 2", "98.94%", "98,94%"), B("Sem. 4", "99.60%", "99,60%"), B("Sem. 6", "99.64%", "99,64%"), B("Sem. 8", "99.27%", "99,27%"), B("Sem. 10", "99.76%", "99,76%"), B("Sem. 12", "99.54%", "99,54%"), B("Sem. 13", "99.29%", "99,29%", "success", null, "font-weight:900")]) +
-        mkChart("Reprovas no Detalhado (Acumulado)", [B("Vazios", "100%", "78", "danger"), B("Ombreiras", "35.9%", "28", "danger"), B("Trincas", "32%", "25", "danger"), B("Quebras", "30.8%", "24", "danger"), B("Falha de Produção", "10.2%", "8", "danger"), B("Outros", "9%", "7", "danger"), B("USP", "0%", "0", "danger")]) +
-        mkChart("Produção por Mês (Fabricados)", [B("Janeiro", "100%", "19.751"), B("Fevereiro", "98.8%", "19.515"), B("Março", "87.2%", "17.217")]),
-
-    madeira: () => mkStats([["Inspecionados", "1.064"], ["Aprovados", "955", "success"], ["Reprovados", "109", "danger"], ["Tx Aprovação (Sem. 13)", "91%", "success"]]) +
-        mkChart("Peças por Fornecedor (Aprovados / Reprovados)", [
-            BM("Ricken", [["93.15%", "success"], ["6.85%", "danger"]], "626 / 46"),
-            BM("Pandolfi", [["82.74%", "success"], ["17.26%", "danger"]], "278 / 58"),
-            BM("Tres Guri", [["91.07%", "success"], ["8.93%", "danger"]], "51 / 5")
-        ]) +
-        mkChart("Taxa de Aprovação por Fornecedor", [B("Ricken", "93.15%", "93,15%", "success"), B("Tres Guri", "91.07%", "91,07%", "success"), B("Pandolfi", "82.74%", "82,74%", "warning")]) +
-        mkChart("Taxa de Aprovação por Semana", [B("Sem. 4", "84.14%", "84,14%"), B("Sem. 5", "93.55%", "93,55%"), B("Sem. 6", "86.58%", "86,58%"), B("Sem. 7", "96.09%", "96,09%"), B("Sem. 8", "89.99%", "89,99%"), B("Sem. 10", "89.15%", "89,15%"), B("Sem. 11", "91.16%", "91,16%"), B("Sem. 12", "89.35%", "89,35%"), B("Sem. 13", "91.07%", "91,07%", "success")]) +
-        mkChart("Taxa de Aprovação por Mês", [B("Janeiro", "88.15%", "88,15%"), B("Fevereiro", "92.17%", "92,17%"), B("Março", "90.02%", "90,02%")]),
-
-    lastro: () => mkStats([["Ensaios Realizados", "71"], ["Ensaios Aprovados", "62", "success"], ["Reprovados", "9", "danger"], ["Tx Aprovação (Sem. 13)", "87%", "warning"]]) +
-        mkChart("Ensaios por Tipo (Aprovados vs Reprovados)", [
-            BM("Granulometria", [["90.7%", "success"], ["9.3%", "danger"]], "54 (49/5)"),
-            BM("F. Fragmentos", [["76.5%", "success"], ["23.5%", "danger"]], "17 (13/4)")
-        ]) +
-        mkChart("Ensaios por Pedreira", [
-            BM("Basalto", [["80%", "success"], ["20%", "danger"]], "16 / 4"),
-            B("Embu S A", "100%", "16 / 0", "success"),
-            BM("Coplan", [["58.3%", "success"], ["41.7%", "danger"]], "7 / 5"),
-            B("Minermix", "100%", "12 / 0", "success"),
-            B("Petra", "100%", "11 / 0", "success")
-        ]) +
-        mkChart("Aprovação por Pedreira", [
-            B("Coplan", "58%", "58%", "danger", null, "color:#C62828"),
-            B("Basalto", "80%", "80%", "warning"),
-            B("Embu S A", "100%", "100%", "success"),
-            B("Minermix", "100%", "100%", "success"),
-            B("Petra", "100%", "100%", "success")
-        ]),
-
-    sub: () => mkStats([["Lotes Inspecionados", "7"], ["Peças Liberadas", "71 Mil", "success"], ["Peças Não Conformes", "0", "success"], ["Lotes Reprovados", "--", "success"]]) +
-        mkChart("Amostras Inspecionadas por Fornecedor", [B("Hipperfreios", "100%", "222")]) +
-        mkChart("Inspeção por Material", [B("Ombreira FAST-CLIP HFOB08", "100%", "142"), B("Palmilha Branca TR68", "56.3%", "80")]) +
-        mkChart("Inspeções por Mês (2026)", [B("Janeiro", "100%", "1,6 Mil"), B("Fevereiro", "87.5%", "1,4 Mil"), B("Março", "37.5%", "0,6 Mil")]),
-
-    rnc: () => mkStats([["Total de Registros", "77"], ["Concluídos", "63", "success"], ["Em Andamento", "9", "warning"], ["Cancelados", "5", "danger"]]) +
-        '<div class="dashboard-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:25px">' +
-        mkStat("% Concluídos", '81,8%', 'success') +
-        mkStat("% Em Andamento", '11,7%', 'warning') +
-        mkStat("% Cancelados", '6,5%', 'danger') + '</div>' +
-        mkChart("Registros Abertos por Fornecedor", [
-            B("Pandolfi", "100%", "17", "warning"),
-            B("Larssen", "88.2%", "15", "warning"),
-            B("Ricken", "64.7%", "11", "warning"),
-            B("F. Garcia", "47%", "8", "warning"),
-            B("Tratanorte", "29.4%", "5", "warning"),
-            B("Autem", "23.5%", "4", "warning")
-        ]) +
-        mkChart("Registros Abertos por Área", [
-            BM("Manutenção", [["81%", "success"], ["7%", "warning"], ["12%", "danger"]], "81%"),
-            BM("Modernização", [["84%", "success"], ["4%", "warning"], ["12%", "danger"]], "84%")
-        ]) +
-        mkChart("Registros Abertos por Material", [
-            BM("Dormente Madeira", [["85%", "success"], ["6%", "warning"], ["9%", "danger"]], "85%"),
-            BM("Lastro", [["75%", "success"], ["13%", "warning"], ["13%", "danger"]], "75%"),
-            B("Dormente Concreto", "100%", "100%", "success"),
-            B("Ombreira E-CLIP", "100%", "100%", "success")
-        ])
+    "14": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">40</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">7</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
+                    <div class="chart-value">40</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">4660</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">4452</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">208</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value success">95.54%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Trincas</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 87.5%;"></div></div>
+                    <div class="chart-value">182</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Quebras</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.8%;"></div></div>
+                    <div class="chart-value">10</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.8%;"></div></div>
+                    <div class="chart-value">10</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ombreiras / Outros</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 2.8%;"></div></div>
+                    <div class="chart-value">6</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1782</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">1476</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">306</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value warning">86%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 69.6%;"></div></div>
+                    <div class="chart-value">213</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Larssen</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 20.6%;"></div></div>
+                    <div class="chart-value">63</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 6.2%;"></div></div>
+                    <div class="chart-value">19</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tres Guri</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 3.6%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">24</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">24</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
+                    <div class="chart-value">18</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
+                    <div class="chart-value">6</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">78</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">10</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros Abertos por Fornecedor (Top 5)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">17</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Larssen</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 88%;"></div></div>
+                    <div class="chart-value">15</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 64%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Garcia</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 47%;"></div></div>
+                    <div class="chart-value">8</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tratanorte</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 29%;"></div></div>
+                    <div class="chart-value">5</div>
+                </div>
+            </div>
+        `
+    }
 };
 
 function atualizarReport() {
-    const s = $('report-semana').value;
-    const a = $('report-area').value;
-    const c = $('report-content');
-    if (a) {
-        c.innerHTML = R[s] && R[s][a] ? R[s][a]() : `<div class="stat-card" style="text-align:center;padding:40px"><h3 style="color:var(--text-title);margin-bottom:10px">Dados da Semana ${s} não disponíveis ainda.</h3><p style="color:var(--text-muted);font-size:.95rem">Envie as imagens atualizadas do dashboard para processamento.</p></div>`;
+    const semana = document.getElementById('report-semana').value;
+    const area = document.getElementById('report-area').value;
+    const container = document.getElementById('report-content');
+    
+    if (area) {
+        if (dadosReport[semana] && dadosReport[semana][area]) {
+            container.innerHTML = dadosReport[semana][area];
+        } else {
+            container.innerHTML = `
+                <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                    <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados da Semana ${semana} não disponíveis ainda.</h3>
+                    <p style="color:var(--text-muted); font-size: 0.95rem;">Por favor, envie as imagens atualizadas do dashboard para que o sistema possa processá-las.</p>
+                </div>
+            `;
+        }
         showEl('report-content');
     } else {
         hideEl('report-content');
@@ -225,405 +309,406 @@ function atualizarReport() {
 }
 
 // === AJUDA VISUAL ===
-const ajudas = {
-    agulha: ['Ponta da Agulha (Perfil 5100)', 'Meça a espessura da ponta da agulha a exatos 15mm do início da usinagem. O desgaste não pode exceder o estipulado na norma AREMA.'],
-    jacare_canal: ['Jacaré - Canal', 'A profundidade do canal deve ser aferida no núcleo do jacaré de aço manganês, garantindo passagem segura do friso da roda.'],
-    nao_cubica: ['Britas Não-Cúbicas', 'Britas lamelares ou alongadas reduzem o intertravamento do lastro. Separe as pedras que visivelmente têm uma dimensão muito maior que as outras para amostragem.'],
-    loc_dormente: ['Localização do Defeito', 'Apoio: Área diretamente abaixo da chapa/trilho. Testeira: As extremidades do dormente. Fora de Apoio: Região central livre.'],
-    def_madeira: ['Tipos de Fenda', 'Fenda de Topo: Inicia na face externa e entra na madeira. Rachadura de Centro: Abertura longitudinal no meio do dormente, não alcançando as bordas.']
+const descricoesAjuda = {
+    'agulha': { titulo: 'Ponta da Agulha (Perfil 5100)', desc: 'Meça a espessura da ponta da agulha a exatos 15mm do início da usinagem. O desgaste não pode exceder o estipulado na norma AREMA.' },
+    'jacare_canal': { titulo: 'Jacaré - Canal', desc: 'A profundidade do canal deve ser aferida no núcleo do jacaré de aço manganês, garantindo passagem segura do friso da roda.' },
+    'nao_cubica': { titulo: 'Britas Não-Cúbicas', desc: 'Britas lamelares ou alongadas reduzem o intertravamento do lastro. Separe as pedras que visivelmente têm uma dimensão muito maior que as outras para amostragem.' },
+    'loc_dormente': { titulo: 'Localização do Defeito', desc: 'Apoio: Área diretamente abaixo da chapa/trilho. Testeira: As extremidades do dormente. Fora de Apoio: Região central livre.' },
+    'def_madeira': { titulo: 'Tipos de Fenda', desc: 'Fenda de Topo: Inicia na face externa e entra na madeira. Rachadura de Centro: Abertura longitudinal no meio do dormente, não alcançando as bordas.' }
 };
-
-function abrirAjuda(k) {
-    if (ajudas[k]) {
-        $('modal-titulo').innerText = ajudas[k][0];
-        $('modal-desc').innerText = ajudas[k][1];
+function abrirAjuda(chave) {
+    if(descricoesAjuda[chave]) {
+        document.getElementById('modal-titulo').innerText = descricoesAjuda[chave].titulo;
+        document.getElementById('modal-desc').innerText = descricoesAjuda[chave].desc;
         showEl('modal-ajuda-visual', 'flex');
     }
 }
+function fecharAjuda() { hideEl('modal-ajuda-visual'); }
 
-function fecharAjuda() {
-    hideEl('modal-ajuda-visual');
-}
-
-// === INTERFACE UPDATES ===
-function atualizarInterface(mod) {
-    const base = mod.split('_')[0];
-    hideEl(`resultado-box-${base}`);
-    hideEl(`botoes-acao-${base}`);
-
-    if (mod === 'amv') {
-        const c = $('amv-componente').value;
-        hideAll('[id^="amv-inputs-"]');
-        hideEl('btn-amv');
-        if (c) {
-            showEl(`amv-inputs-${c}`, 'grid');
-            showEl('btn-amv');
-        }
+// === INTERFACE GERAL ===
+function atualizarInterface(modulo) {
+    hideEl(`resultado-box-${modulo.split('_')[0]}`);
+    hideEl(`botoes-acao-${modulo.split('_')[0]}`);
+    
+    if (modulo === 'amv') {
+        const comp = document.getElementById('amv-componente').value;
+        hideAll('[id^="amv-inputs-"]'); hideEl('btn-amv');
+        if(comp) { showEl(`amv-inputs-${comp}`, 'grid'); showEl('btn-amv'); }
+    } 
+    else if (modulo === 'brita') {
+        const cat = document.getElementById('brita-categoria').value;
+        hideEl('brita-check-visual'); hideEl('brita-inputs-lote'); hideEl('brita-inputs-granulometria'); hideEl('brita-inputs-lab'); hideEl('btn-brita');
+        
+        if(cat === 'visual') { showEl('brita-check-visual', 'flex'); showEl('btn-brita'); }
+        else if (cat === 'forma_lote') { showEl('brita-inputs-lote', 'grid'); showEl('btn-brita'); }
+        else if (cat === 'granulometria') { showEl('brita-inputs-granulometria'); showEl('btn-brita'); }
+        else if (cat === 'laboratorio') { showEl('brita-inputs-lab'); showEl('btn-brita'); }
     }
-    else if (mod === 'brita') {
-        const c = $('brita-categoria').value;
-        ['brita-check-visual', 'brita-inputs-lote', 'brita-inputs-granulometria', 'brita-inputs-lab', 'btn-brita'].forEach(hideEl);
-        if (c === 'visual') {
-            showEl('brita-check-visual', 'flex');
-            showEl('btn-brita');
-        } else if (c === 'forma_lote') {
-            showEl('brita-inputs-lote', 'grid');
-            showEl('btn-brita');
-        } else if (c === 'granulometria') {
-            showEl('brita-inputs-granulometria');
-            showEl('btn-brita');
-        } else if (c === 'laboratorio') {
-            showEl('brita-inputs-lab');
-            showEl('btn-brita');
-        }
+    else if (modulo === 'madeira') {
+        const cat = document.getElementById('mad-categoria').value;
+        hideEl('mad-inputs-fisico'); hideEl('mad-inputs-defeito'); hideEl('btn-madeira');
+        if(cat === 'fisico') { showEl('mad-inputs-fisico', 'grid'); showEl('btn-madeira'); }
+        else if(cat === 'defeito') { showEl('mad-inputs-defeito'); atualizarInterface('madeira_sub'); }
     }
-    else if (mod === 'madeira') {
-        const c = $('mad-categoria').value;
-        hideEl('mad-inputs-fisico');
-        hideEl('mad-inputs-defeito');
-        hideEl('btn-madeira');
-        if (c === 'fisico') {
-            showEl('mad-inputs-fisico', 'grid');
-            showEl('btn-madeira');
-        } else if (c === 'defeito') {
-            showEl('mad-inputs-defeito');
-            atualizarInterface('madeira_sub');
-        }
-    }
-    else if (mod === 'madeira_sub') {
-        const t = $('mad-tipo-defeito').value;
-        ['mad-check-fixacao', 'mad-dims-racha', 'mad-dims-furos', 'mad-dims-empenamento', 'mad-div-prof-racha', 'mad-dims-esmoado', 'mad-dims-dimensoes', 'btn-madeira'].forEach(hideEl);
-        if (!t) return;
+    else if (modulo === 'madeira_sub') {
+        const tipo = document.getElementById('mad-tipo-defeito').value;
+        hideEl('mad-check-fixacao'); hideEl('mad-dims-racha'); hideEl('mad-dims-furos'); hideEl('mad-dims-empenamento'); hideEl('mad-div-prof-racha');
+        hideEl('mad-dims-esmoado'); hideEl('mad-dims-dimensoes'); hideEl('btn-madeira');
+        
+        if(!tipo) return;
+        
         showEl('btn-madeira');
-        if (!['empenamento', 'podre', 'casca', 'anti_rachante', 'amarracao', 'dimensoes'].includes(t)) showEl('mad-check-fixacao', 'flex');
-        if (t === 'racha_topo') showEl('mad-dims-racha', 'grid');
-        else if (t === 'racha_centro') { showEl('mad-dims-racha', 'grid'); showEl('mad-div-prof-racha'); }
-        else if (t === 'furos_nos') showEl('mad-dims-furos', 'grid');
-        else if (t === 'empenamento') showEl('mad-dims-empenamento', 'grid');
-        else if (t === 'esmoado') showEl('mad-dims-esmoado', 'grid');
-        else if (t === 'dimensoes') showEl('mad-dims-dimensoes', 'block');
+        if(tipo !== 'empenamento' && tipo !== 'podre' && tipo !== 'casca' && tipo !== 'anti_rachante' && tipo !== 'amarracao' && tipo !== 'dimensoes') {
+            showEl('mad-check-fixacao', 'flex');
+        }
+        
+        if(tipo === 'racha_topo') showEl('mad-dims-racha', 'grid');
+        else if(tipo === 'racha_centro') { showEl('mad-dims-racha', 'grid'); showEl('mad-div-prof-racha'); }
+        else if(tipo === 'furos_nos') showEl('mad-dims-furos', 'grid');
+        else if(tipo === 'empenamento') showEl('mad-dims-empenamento', 'grid');
+        else if(tipo === 'esmoado') showEl('mad-dims-esmoado', 'grid');
+        else if(tipo === 'dimensoes') showEl('mad-dims-dimensoes', 'block');
     }
-    else if (mod === 'sub') {
-        const c = $('sub-categoria').value;
-        const ct = $('sub-inputs-container');
-        ct.innerHTML = '';
-        hideEl('sub-inputs-container');
-        hideEl('btn-sub');
-        if (c && subDados[c]) {
-            subDados[c].m.forEach((m, i) => {
-                ct.innerHTML += `<div class="form-group"><label>${m.l}:</label><input type="number" id="val-sub-m${i + 1}" step="0.01"></div>`;
+    else if (modulo === 'sub') {
+        const cat = document.getElementById('sub-categoria').value;
+        const container = document.getElementById('sub-inputs-container');
+        container.innerHTML = ''; hideEl('sub-inputs-container'); hideEl('btn-sub');
+        if(cat && subDados[cat]) {
+            subDados[cat].m.forEach((medida, index) => {
+                container.innerHTML += `<div class="form-group"><label>${medida.l}:</label><input type="number" id="val-sub-m${index+1}" step="0.01"></div>`;
             });
-            showEl('sub-inputs-container', 'grid');
-            showEl('btn-sub');
+            showEl('sub-inputs-container', 'grid'); showEl('btn-sub');
         }
     }
 }
 
-// === ANIMATION LAUDO ===
-function animarTexto(boxId, texto, cls) {
-    const box = $(boxId);
-    box.className = `resultado-box ${cls}`;
+// === ANIMAÇÃO DO LAUDO ===
+function animarTexto(boxId, textoFinal, statusClass) {
+    const box = document.getElementById(boxId);
+    box.className = `resultado-box ${statusClass}`;
     box.style.display = 'block';
     box.innerHTML = '';
-    const sec = boxId.split('-')[2];
-    hideEl(`botoes-acao-${sec}`);
+    
+    const secaoAtual = boxId.split('-')[2];
+    hideEl(`botoes-acao-${secaoAtual}`);
+    
     const aviso = box.parentElement.querySelector('.aviso-normativo');
-    if (aviso) aviso.style.display = 'none';
-
-    let i = 0;
-    (function dig() {
-        if (i < texto.length) {
-            box.innerHTML += texto.charAt(i) === '\n' ? '<br>' : texto.charAt(i);
-            i++;
-            setTimeout(dig, 10);
+    if(aviso) aviso.style.display = 'none';
+    
+    let i = 0; const speed = 10;
+    function digitar() {
+        if (i < textoFinal.length) {
+            box.innerHTML += textoFinal.charAt(i) === '\n' ? '<br>' : textoFinal.charAt(i);
+            i++; setTimeout(digitar, speed);
         } else {
-            showEl(`botoes-acao-${sec}`, 'grid');
-            if (aviso) aviso.style.display = 'block';
+            showEl(`botoes-acao-${secaoAtual}`, 'grid');
+            if(aviso) aviso.style.display = 'block';
         }
-    })();
+    }
+    digitar();
 }
 
-// === ANÁLISE CONCRETO ===
+// === LÓGICAS DE ANÁLISE DETALHADA ===
+
+// 1. CONCRETO
 const optLocal = {
-    vazio: [{ val: 'apoio', txt: 'Apoio do Trilho' }, { val: 'fora_apoio', txt: 'Fora da Região do Trilho' }, { val: 'testeira', txt: 'Testeira' }],
-    quebra: [{ val: 'lat_sup', txt: 'Laterais / Superior (fora trilho)' }, { val: 'testeira', txt: 'Testeira' }],
-    fissura: [{ val: 'ombreira', txt: 'Ombreira' }, { val: 'lateral', txt: 'Lateral' }, { val: 'transversal', txt: 'Transversal' }]
+    vazio: [{val: 'apoio', txt: 'Apoio do Trilho'}, {val: 'fora_apoio', txt: 'Fora da Região do Trilho'}, {val: 'testeira', txt: 'Testeira'}],
+    quebra: [{val: 'lat_sup', txt: 'Laterais / Superior (fora trilho)'}, {val: 'testeira', txt: 'Testeira'}],
+    fissura: [{val: 'ombreira', txt: 'Ombreira'}, {val: 'lateral', txt: 'Lateral'}, {val: 'transversal', txt: 'Transversal'}]
 };
 
 function atualizarOpcoes() {
-    const t = $('tipo-defeito').value;
-    const s = $('localizacao');
-    s.innerHTML = '<option value="">Selecione a região...</option>';
-    if (t && optLocal[t]) optLocal[t].forEach(o => s.innerHTML += `<option value="${o.val}">${o.txt}</option>`);
+    const tipo = document.getElementById('tipo-defeito').value;
+    const selLocal = document.getElementById('localizacao');
+    selLocal.innerHTML = '<option value="">Selecione a região...</option>';
+    if (tipo && optLocal[tipo]) optLocal[tipo].forEach(opt => selLocal.innerHTML += `<option value="${opt.val}">${opt.txt}</option>`);
     atualizarCampos();
 }
 
 function atualizarCampos() {
-    const t = $('tipo-defeito').value;
-    const l = $('localizacao').value;
-    hideEl('dimensoes-inputs');
-    hideEl('container-aco');
+    const tipo = document.getElementById('tipo-defeito').value;
+    const local = document.getElementById('localizacao').value;
+    hideEl('dimensoes-inputs'); hideEl('container-aco');
     hideAll('#dimensoes-inputs .form-group');
-    if (!l) return;
+    if (!local) return;
+    
     showEl('dimensoes-inputs', 'grid');
-    if (t === 'vazio') {
+    if (tipo === 'vazio') {
         showEl('div-profundidade'); showEl('div-comprimento'); showEl('div-largura');
-        if (l === 'testeira') showEl('container-aco', 'flex');
-    } else if (t === 'quebra') {
-        showEl('div-profundidade'); showEl('div-comprimento'); showEl('div-largura');
-        showEl('container-aco', 'flex');
-    } else if (t === 'fissura') {
-        if (l === 'lateral' || l === 'transversal') {
-            showEl('div-espessura'); showEl('div-comprimento');
-        } else hideEl('dimensoes-inputs');
+        if (local === 'testeira') showEl('container-aco', 'flex');
+    } else if (tipo === 'quebra') {
+        showEl('div-profundidade'); showEl('div-comprimento'); showEl('div-largura'); showEl('container-aco', 'flex');
+    } else if (tipo === 'fissura') {
+        if (local === 'lateral' || local === 'transversal') { showEl('div-espessura'); showEl('div-comprimento'); } 
+        else hideEl('dimensoes-inputs');
     }
 }
 
 function analisarDefeito() {
-    const t = $('tipo-defeito').value;
-    const l = $('localizacao').value;
-    const p = V('val-profundidade');
-    const c = V('val-comprimento');
-    const la = V('val-largura');
-    const e = V('val-espessura');
-    const aco = $('aco-exposto').checked;
-
-    let s = 'aceitavel', ti = '✅ ACEITÁVEL', d = '', ref = '', ac = '✅ AÇÃO: Liberar lote para aplicação.';
-
-    // (Todo o código de análise de concreto mantido exatamente como no original)
-    if (t === 'vazio') {
-        if (l === 'apoio') {
+    const tipo = document.getElementById('tipo-defeito').value;
+    const local = document.getElementById('localizacao').value;
+    const prof = getVal('val-profundidade'); const comp = getVal('val-comprimento'); const larg = getVal('val-largura'); const esp = getVal('val-espessura');
+    const acoExposto = document.getElementById('aco-exposto').checked;
+    
+    let status = 'aceitavel', titulo = '✅ ACEITÁVEL', dim = '', ref = '', acao = '✅ AÇÃO: Liberar lote para aplicação.';
+    
+    if (tipo === 'vazio') {
+        if (local === 'apoio') {
             ref = 'Tabela 1';
-            if (p <= 2 && c <= 3 && la <= 3) d = 'Profundidade ≤2 mm | Comprimento ≤3 mm | Largura ≤3 mm';
-            else if (p <= 5 && c <= 10 && la <= 10) { s = 'reparar'; ti = '🔧 REPARAR'; d = 'Profundidade 3-5 mm | Comprimento 4-10 mm | Largura 4-10 mm'; ac = '⚠️ AÇÃO: Executar reparo com argamassa epóxi antes da liberação.'; }
-            else { s = 'refugo'; ti = '❌ REFUGO'; d = 'Profundidade >6 mm | Comprimento >11 mm | Largura >11 mm'; ac = '🚫 AÇÃO: Segregar dormente e preencher RNC imediata.'; }
-        } else if (l === 'fora_apoio') {
+            if (prof <= 2 && comp <= 3 && larg <= 3) dim = 'Profundidade ≤2 mm | Comprimento ≤3 mm | Largura ≤3 mm';
+            else if (prof <= 5 && comp <= 10 && larg <= 10) { status = 'reparar'; titulo = '🔧 REPARAR'; dim = 'Profundidade 3-5 mm | Comprimento 4-10 mm | Largura 4-10 mm'; acao = '⚠️ AÇÃO: Executar reparo com argamassa epóxi antes da liberação.'; }
+            else { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Profundidade >6 mm | Comprimento >11 mm | Largura >11 mm'; acao = '🚫 AÇÃO: Segregar dormente e preencher RNC imediata.'; }
+        } else if (local === 'fora_apoio') {
             ref = 'Tabela 2';
-            if (p <= 5 && c <= 5 && la <= 5) d = 'Profundidade ≤5 mm | Comprimento ≤5 mm | Altura ≤5 mm';
-            else if (p <= 10 && c <= 20 && la <= 20) { s = 'reparar'; ti = '🔧 REPARAR'; d = 'Profundidade 6-10 mm | Comprimento 6-20 mm | Altura 6-20 mm'; ac = '⚠️ AÇÃO: Executar reparo na superfície.'; }
-            else { s = 'refugo'; ti = '❌ REFUGO'; d = 'Profundidade >11 mm | Comprimento >21 mm | Altura >21 mm'; ac = '🚫 AÇÃO: Segregar dormente e preencher RNC imediata.'; }
-        } else if (l === 'testeira') {
+            if (prof <= 5 && comp <= 5 && larg <= 5) dim = 'Profundidade ≤5 mm | Comprimento ≤5 mm | Altura ≤5 mm';
+            else if (prof <= 10 && comp <= 20 && larg <= 20) { status = 'reparar'; titulo = '🔧 REPARAR'; dim = 'Profundidade 6-10 mm | Comprimento 6-20 mm | Altura 6-20 mm'; acao = '⚠️ AÇÃO: Executar reparo na superfície.'; }
+            else { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Profundidade >11 mm | Comprimento >21 mm | Altura >21 mm'; acao = '🚫 AÇÃO: Segregar dormente e preencher RNC imediata.'; }
+        } else if (local === 'testeira') {
             ref = 'Página 15-16';
-            if (aco && p >= 31) { s = 'refugo'; ti = '❌ REFUGO'; d = 'Exposição de armadura tolerável: até 30 mm'; ac = '🚫 AÇÃO: Risco estrutural. Sucatar peça.'; }
-            else if (!aco && p <= 50) { s = 'reparar'; ti = '🔧 REPARAR'; d = 'Profundidade máxima reparável: 50 mm'; ac = '⚠️ AÇÃO: Necessário preenchimento da testeira.'; }
-            else { s = 'refugo'; ti = '❌ REFUGO'; d = 'Profundidade >51 mm'; ac = '🚫 AÇÃO: Segregar dormente e preencher RNC.'; }
+            if (acoExposto && prof >= 31) { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Exposição de armadura tolerável: até 30 mm'; acao = '🚫 AÇÃO: Risco estrutural. Sucatar peça.'; }
+            else if (!acoExposto && prof <= 50) { status = 'reparar'; titulo = '🔧 REPARAR'; dim = 'Profundidade máxima reparável: 50 mm'; acao = '⚠️ AÇÃO: Necessário preenchimento da testeira.'; }
+            else { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Profundidade >51 mm'; acao = '🚫 AÇÃO: Segregar dormente e preencher RNC.'; }
         }
-    } else if (t === 'quebra') {
-        ref = l === 'lat_sup' ? 'Tabela 3' : 'Tabela 4';
-        if (aco) { s = 'refugo'; ti = '❌ REFUGO'; d = 'Qualquer exposição de armadura ativa = refugo'; ac = '🚫 AÇÃO: Armadura comprometida. Refugar.'; }
-        else if (p <= 10 && c <= 49 && la <= 29) d = 'Prof. ≤10 mm | Comp. ≤49 mm | Alt. ≤29 mm';
-        else if (p <= 20 && c <= 200 && la <= 150) { s = 'reparar'; ti = '🔧 REPARAR'; d = 'Prof. 11-20 mm | Comp. 50-200 mm | Alt. 30-150 mm'; ac = '⚠️ AÇÃO: Reparo mandatório da quebra.'; }
-        else { s = 'refugo'; ti = '❌ REFUGO'; d = 'Prof. >21 mm | Comp. >201 mm | Alt. >151 mm'; ac = '🚫 AÇÃO: Quebra excessiva. Abrir RNC.'; }
-    } else if (t === 'fissura') {
+    } else if (tipo === 'quebra') {
+        ref = local === 'lat_sup' ? 'Tabela 3' : 'Tabela 4';
+        if (acoExposto) { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Qualquer exposição de armadura ativa = refugo'; acao = '🚫 AÇÃO: Armadura comprometida. Refugar.'; }
+        else if (prof <= 10 && comp <= 49 && larg <= 29) dim = 'Prof. ≤10 mm | Comp. ≤49 mm | Alt. ≤29 mm';
+        else if (prof <= 20 && comp <= 200 && larg <= 150) { status = 'reparar'; titulo = '🔧 REPARAR'; dim = 'Prof. 11-20 mm | Comp. 50-200 mm | Alt. 30-150 mm'; acao = '⚠️ AÇÃO: Reparo mandatório da quebra.'; }
+        else { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Prof. >21 mm | Comp. >201 mm | Alt. >151 mm'; acao = '🚫 AÇÃO: Quebra excessiva. Abrir RNC.'; }
+    } else if (tipo === 'fissura') {
         ref = 'Tabela 5';
-        if (l === 'ombreira') { s = 'refugo'; ti = '❌ REFUGO'; d = 'Fissura na ombreira = refugo'; ac = '🚫 AÇÃO: Refugo sumário.'; }
-        else if (l === 'lateral' || l === 'transversal') {
-            if (e <= 0.10 && c <= 10) d = 'Espessura ≤0,10 mm | Comprimento ≤10 mm';
-            else if (e <= 0.50 && c <= 100) { s = 'reparar'; ti = '🔧 REPARAR'; d = 'Espessura 0,15-0,50 mm | Comprimento 11-100 mm'; ac = '⚠️ AÇÃO: Injeção de epóxi necessária.'; }
-            else { s = 'refugo'; ti = '❌ REFUGO'; d = 'Espessura ≥0,55 mm | Comprimento >101 mm'; ac = '🚫 AÇÃO: Fissura estrutural grave. Refugar.'; }
+        if (local === 'ombreira') { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Fissura na ombreira = refugo'; acao = '🚫 AÇÃO: Refugo sumário.'; }
+        else if (local === 'lateral' || local === 'transversal') {
+            if (esp <= 0.10 && comp <= 10) dim = 'Espessura ≤0,10 mm | Comprimento ≤10 mm';
+            else if (esp <= 0.50 && comp <= 100) { status = 'reparar'; titulo = '🔧 REPARAR'; dim = 'Espessura 0,15-0,50 mm | Comprimento 11-100 mm'; acao = '⚠️ AÇÃO: Injeção de epóxi necessária.'; }
+            else { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Espessura ≥0,55 mm | Comprimento >101 mm'; acao = '🚫 AÇÃO: Fissura estrutural grave. Refugar.'; }
         }
     }
-    animarTexto('resultado-box-concreto', `${ti}\n\n📏 Análise:\n${d}\n\n${ac}\n\n📄 PO-SPE-160 (${ref})`, s);
+    animarTexto('resultado-box-concreto', `${titulo}\n\n📏 Análise:\n${dim}\n\n${acao}\n\n📄 PO-SPE-160 (${ref})`, status);
 }
 
-// === ANÁLISE AMV ===
+// 2. AMV
 function analisarAMV() {
-    const comp = $('amv-componente').value;
-    let s = 'aceitavel', ti = '✅ CONFORME', d = '', ref = '', ac = '✅ AÇÃO: Componente liberado para montagem/operação.';
-
+    const comp = document.getElementById('amv-componente').value;
+    let status = 'aceitavel', titulo = '✅ CONFORME', dim = '', ref = '', acao = '✅ AÇÃO: Componente liberado para montagem/operação.';
+    
     if (comp === 'agulha') {
-        const p = V('val-amv-ponta');
-        ref = 'ETMs 0005, 0007, 0008, 0009';
-        if (p <= 3.9) {
-            d = 'Ponta de agulha dentro da tolerância.\n(Nominal AREMA: 3.1mm + Tol: 0.8mm)';
-            if (p >= 3.7) { d += '\n⚠️ ALERTA DE TENDÊNCIA: Desgaste próximo ao limite crítico.'; ac = '⚠️ AÇÃO: Liberado, mas programar monitoramento.'; }
-        } else { s = 'refugo'; ti = '❌ NÃO CONFORME'; d = 'Ponta de agulha acima da tolerância máxima (3.9mm). Desgaste excessivo.'; ac = '🚫 AÇÃO: Risco de descarrilamento. Bloquear e substituir.'; }
+        const ponta = getVal('val-amv-ponta'); ref = 'ETMs 0005, 0007, 0008, 0009';
+        if (ponta <= 3.9) { 
+            dim = 'Ponta de agulha dentro da tolerância.\n(Nominal AREMA: 3.1mm + Tol: 0.8mm)';
+            if (ponta >= 3.7) { dim += '\n⚠️ ALERTA DE TENDÊNCIA: Desgaste próximo ao limite crítico.'; acao = '⚠️ AÇÃO: Liberado, mas programar monitoramento.'; }
+        }
+        else { status = 'refugo'; titulo = '❌ NÃO CONFORME'; dim = 'Ponta de agulha acima da tolerância máxima (3.9mm). Desgaste excessivo.'; acao = '🚫 AÇÃO: Risco de descarrilamento. Bloquear e substituir.'; }
     } else if (comp === 'rolete') {
-        const a = V('val-amv-altura-rolete');
-        ref = 'EM-SPE-072 (Item 5.2)';
-        if (a <= 2.0) d = 'Altura do rolete atende aos requisitos (≤ 2.0mm em relação à base da agulha).';
-        else { s = 'reparar'; ti = '🔧 NECESSITA CALIBRAÇÃO'; d = 'Altura superior a 2.0 mm.'; ac = '⚠️ AÇÃO: Acionar equipe de via para recalibrar a altura.'; }
+        const altura = getVal('val-amv-altura-rolete'); ref = 'EM-SPE-072 (Item 5.2)';
+        if (altura <= 2.0) dim = 'Altura do rolete atende aos requisitos (≤ 2.0mm em relação à base da agulha).';
+        else { status = 'reparar'; titulo = '🔧 NECESSITA CALIBRAÇÃO'; dim = 'Altura superior a 2.0 mm.'; acao = '⚠️ AÇÃO: Acionar equipe de via para recalibrar a altura.'; }
     } else if (comp === 'coxin') {
-        const du = V('val-amv-coxin');
-        ref = 'EM-SPE-072 (Item 5.3.1)';
-        if (du >= 88 && du <= 92) d = 'Dureza Shore A do coxin atende aos requisitos (88 a 92).';
-        else { s = 'refugo'; ti = '❌ NÃO CONFORME'; d = 'Dureza fora da tolerância exigida (Min: 88 | Max: 92).'; ac = '🚫 AÇÃO: Rejeitar lote de coxins. Retornar ao fornecedor.'; }
+        const dureza = getVal('val-amv-coxin'); ref = 'EM-SPE-072 (Item 5.3.1)';
+        if (dureza >= 88 && dureza <= 92) dim = 'Dureza Shore A do coxin atende aos requisitos (88 a 92).';
+        else { status = 'refugo'; titulo = '❌ NÃO CONFORME'; dim = 'Dureza fora da tolerância exigida (Min: 88 | Max: 92).'; acao = '🚫 AÇÃO: Rejeitar lote de coxins. Retornar ao fornecedor.'; }
     } else if (comp === 'jacare_canal') {
-        const p = V('val-amv-jacare-canal');
-        ref = 'ETMs 0005, 0007, 0008, 0009';
-        if (p >= 51 && p <= 55) d = 'Profundidade do canal conforme (53 ± 2 mm).';
-        else { s = 'reparar'; ti = '🔧 NECESSITA REPARO'; d = 'Profundidade fora da tolerância (Min: 51 mm | Max: 55 mm).'; ac = '⚠️ AÇÃO: Solicitar esmerilhamento ou preenchimento de solda.'; }
+        const prof = getVal('val-amv-jacare-canal'); ref = 'ETMs 0005, 0007, 0008, 0009';
+        if (prof >= 51.0 && prof <= 55.0) dim = 'Profundidade do canal conforme (53 ± 2 mm).';
+        else { status = 'reparar'; titulo = '🔧 NECESSITA REPARO'; dim = 'Profundidade fora da tolerância (Min: 51 mm | Max: 55 mm).'; acao = '⚠️ AÇÃO: Solicitar esmerilhamento ou preenchimento de solda.'; }
     } else if (comp === 'jacare_dureza') {
-        const du = V('val-amv-jacare-dureza');
-        ref = 'ETMs 0008, 0009';
-        if (du >= 352 && du <= 418) d = 'Dureza Brinell atende aos requisitos (352 a 418 HB).';
-        else { s = 'refugo'; ti = '❌ NÃO CONFORME'; d = 'Dureza fora da tolerância exigida (Min: 352 HB | Max: 418 HB).'; ac = '🚫 AÇÃO: Bloquear lote do Jacaré e abrir RNC.'; }
+        const dureza = getVal('val-amv-jacare-dureza'); ref = 'ETMs 0008, 0009';
+        if (dureza >= 352 && dureza <= 418) dim = 'Dureza Brinell atende aos requisitos (352 a 418 HB).';
+        else { status = 'refugo'; titulo = '❌ NÃO CONFORME'; dim = 'Dureza fora da tolerância exigida (Min: 352 HB | Max: 418 HB).'; acao = '🚫 AÇÃO: Bloquear lote do Jacaré e abrir RNC.'; }
     } else if (comp === 'fixacao_concreto') {
-        const p = V('val-amv-fixacao');
-        ref = 'ENG-DSV-VP-ETM-A0019';
-        if (p >= 900 && p <= 1500) d = 'Pressão do grampo atende aos requisitos (Exigido: 1200 ± 300 kgf).';
-        else { s = 'reparar'; ti = '🔧 VERIFICAR FIXAÇÃO'; d = 'Pressão do grampo fora da faixa (900 a 1500 kgf).'; ac = '⚠️ AÇÃO: Substituir grampos fadigados na região.'; }
+        const pressao = getVal('val-amv-fixacao'); ref = 'ENG-DSV-VP-ETM-A0019';
+        if (pressao >= 900 && pressao <= 1500) dim = 'Pressão do grampo atende aos requisitos (Exigido: 1200 ± 300 kgf).';
+        else { status = 'reparar'; titulo = '🔧 VERIFICAR FIXAÇÃO'; dim = 'Pressão do grampo fora da faixa (900 a 1500 kgf).'; acao = '⚠️ AÇÃO: Substituir grampos fadigados na região.'; }
     } else if (comp === 'cilindro') {
-        const p = V('val-amv-pressao'), t = V('val-amv-tempo');
-        ref = 'EM-SPE-026';
-        if (p >= 500 && t >= 10 && t <= 12) d = 'Pressão e tempo de acionamento em conformidade (Mín 500kgf, 10-12s).';
-        else { s = 'reparar'; ti = '🔧 REGULAR CILINDRO'; d = 'Parâmetros fora da norma estabelecida.'; ac = '⚠️ AÇÃO: Ajuste de válvula do cilindro pela manutenção.'; }
+        const pressao = getVal('val-amv-pressao'), tempo = getVal('val-amv-tempo'); ref = 'EM-SPE-026';
+        if (pressao >= 500 && tempo >= 10 && tempo <= 12) dim = 'Pressão e tempo de acionamento em conformidade (Mín 500kgf, 10-12s).';
+        else { status = 'reparar'; titulo = '🔧 REGULAR CILINDRO'; dim = 'Parâmetros fora da norma estabelecida.'; acao = '⚠️ AÇÃO: Ajuste de válvula do cilindro pela manutenção.'; }
     } else if (comp === 'batefica') {
-        const dl = V('val-amv-deslocamento');
-        ref = 'EM-SPE-017';
-        if (dl >= 100 && dl <= 121) d = 'Deslocamento da agulha operando adequadamente (100 a 121 mm).';
-        else { s = 'reparar'; ti = '🔧 NECESSITA AJUSTE'; d = 'Deslocamento fora da tolerância (100 mm a 121 mm).'; ac = '⚠️ AÇÃO: Calibrar hastes do aparelho Bate-Fica.'; }
+        const deslocamento = getVal('val-amv-deslocamento'); ref = 'EM-SPE-017';
+        if (deslocamento >= 100 && deslocamento <= 121) dim = 'Deslocamento da agulha operando adequadamente (100 a 121 mm).';
+        else { status = 'reparar'; titulo = '🔧 NECESSITA AJUSTE'; dim = 'Deslocamento fora da tolerância (100 mm a 121 mm).'; acao = '⚠️ AÇÃO: Calibrar hastes do aparelho Bate-Fica.'; }
     }
-    animarTexto('resultado-box-amv', `${ti}\n\n📏 Análise:\n${d}\n\n${ac}\n\n📄 Lote ETM-AMV (${ref})`, s);
+    animarTexto('resultado-box-amv', `${titulo}\n\n📏 Análise:\n${dim}\n\n${acao}\n\n📄 Lote ETM-AMV (${ref})`, status);
 }
 
-// === ANÁLISE BRITA ===
+// 3. BRITA
 function analisarBrita() {
-    const cat = $('brita-categoria').value;
-    const lito = $('brita-litologia').value;
-    let s = 'aceitavel', ti = '✅ CONFORME', d = '', ac = '✅ AÇÃO: Lote de brita liberado para lastramento.';
+    const cat = document.getElementById('brita-categoria').value;
+    const lito = document.getElementById('brita-litologia').value;
+    let status = 'aceitavel', titulo = '✅ CONFORME', dim = '', acao = '✅ AÇÃO: Lote de brita liberado para lastramento.';
 
     if (cat === 'visual') {
-        if ($('brita-presenca-finos').checked) { s = 'refugo'; ti = '❌ NÃO ACEITAR (REFUGO)'; d = 'Lastro Contaminado: Presença visível de materiais finos.'; ac = '🚫 AÇÃO: Rejeitar vagão imediatamente.'; }
-        else d = 'Inspeção visual em conformidade. Sem contaminantes.';
+        if (document.getElementById('brita-presenca-finos').checked) { status = 'refugo'; titulo = '❌ NÃO ACEITAR (REFUGO)'; dim = 'Lastro Contaminado: Presença visível de materiais finos.'; acao = '🚫 AÇÃO: Rejeitar vagão imediatamente.'; }
+        else dim = 'Inspeção visual em conformidade. Sem contaminantes.';
     } else if (cat === 'forma_lote') {
-        const p = V('val-brita-nao-cubicas');
-        if (p > 15) { s = 'refugo'; ti = '❌ NÃO ACEITAR (REFUGO)'; d = `Amostra possui ${p}% de britas não-cúbicas (Max: 15%).`; ac = '🚫 AÇÃO: Lote reprovado. Solicitar nova britagem.'; }
-        else d = `Índice de britas não-cúbicas (${p}%) dentro da tolerância (≤ 15%).`;
+        const perc = getVal('val-brita-nao-cubicas');
+        const limitNaoCubica = 15; 
+        if (perc > limitNaoCubica) { status = 'refugo'; titulo = '❌ NÃO ACEITAR (REFUGO)'; dim = `Amostra possui ${perc}% de britas não-cúbicas (Max: ${limitNaoCubica}%).`; acao = '🚫 AÇÃO: Lote reprovado. Solicitar nova britagem.'; }
+        else dim = `Índice de britas não-cúbicas (${perc}%) dentro da tolerância (≤ ${limitNaoCubica}%).`;
     } else if (cat === 'granulometria') {
-        const g3 = V('val-brita-g3'), g250 = V('val-brita-g250'), g150 = V('val-brita-g150'), g075 = V('val-brita-g075'), g050 = V('val-brita-g050');
-        let er = [];
-        if (g3 !== 0) er.push(`- 3": deve ser 0% (Atual: ${g3}%)`);
-        if (g250 < 0 || g250 > 10) er.push(`- 2.1/2": 0% a 10% (Atual: ${g250}%)`);
-        if (g150 < 40 || g150 > 75) er.push(`- 1.1/2": 40% a 75% (Atual: ${g150}%)`);
-        if (g075 < 90 || g075 > 100) er.push(`- 3/4": 90% a 100% (Atual: ${g075}%)`);
-        if (g050 < 95 || g050 > 100) er.push(`- 1/2": 95% a 100% (Atual: ${g050}%)`);
-        if (er.length) { s = 'refugo'; ti = '❌ NÃO ACEITAR (REFUGO)'; d = 'Amostra fora da faixa granulométrica AREMA 24:\n' + er.join('\n'); ac = '🚫 AÇÃO: Lote reprovado.'; }
-        else d = 'Percentuais retidos em conformidade com o Plano 24 da AREMA.';
+        const g3 = getVal('val-brita-g3'), g250 = getVal('val-brita-g250'), g150 = getVal('val-brita-g150'), g075 = getVal('val-brita-g075'), g050 = getVal('val-brita-g050');
+        let erros = [];
+        if (g3 !== 0) erros.push(`- 3": deve ser 0% (Atual: ${g3}%)`);
+        if (g250 < 0 || g250 > 10) erros.push(`- 2.1/2": 0% a 10% (Atual: ${g250}%)`);
+        if (g150 < 40 || g150 > 75) erros.push(`- 1.1/2": 40% a 75% (Atual: ${g150}%)`);
+        if (g075 < 90 || g075 > 100) erros.push(`- 3/4": 90% a 100% (Atual: ${g075}%)`);
+        if (g050 < 95 || g050 > 100) erros.push(`- 1/2": 95% a 100% (Atual: ${g050}%)`);
+        
+        if (erros.length > 0) { status = 'refugo'; titulo = '❌ NÃO ACEITAR (REFUGO)'; dim = 'Amostra fora da faixa granulométrica AREMA 24:\n' + erros.join('\n'); acao = '🚫 AÇÃO: Lote reprovado.'; }
+        else dim = 'Percentuais retidos em conformidade com o Plano 24 da AREMA.';
     } else if (cat === 'laboratorio') {
-        const la = V('val-brita-losangeles'), pu = V('val-brita-pulverulento'), ar = V('val-brita-argila');
-        let er = [];
-        const lim = lito === 'granito' ? 35 : 30;
-        if (la > lim) er.push(`- Abrasão Los Angeles: ${la}% (Max p/ ${lito}: ${lim}%)`);
-        if (pu > 1) er.push(`- Mat. Pulverulento: ${pu}% (Max: 1%)`);
-        if (ar > 0.5) er.push(`- Torrões de Argila: ${ar}% (Max: 0.5%)`);
-        if (er.length) { s = 'refugo'; ti = '❌ LAUDO REPROVADO'; d = 'Falha nos ensaios mecânicos/físicos:\n' + er.join('\n'); ac = '🚫 AÇÃO: Bloquear pedreira/veio para fornecimento.'; }
-        else d = `Ensaios físicos em conformidade para Litologia: ${lito.toUpperCase()}.`;
+        const la = getVal('val-brita-losangeles'), pulv = getVal('val-brita-pulverulento'), arg = getVal('val-brita-argila');
+        let erros = [];
+        const limitLA = (lito === 'granito') ? 35 : 30;
+        
+        if (la > limitLA) erros.push(`- Abrasão Los Angeles: ${la}% (Max p/ ${lito}: ${limitLA}%)`);
+        if (pulv > 1) erros.push(`- Mat. Pulverulento: ${pulv}% (Max: 1%)`);
+        if (arg > 0.5) erros.push(`- Torrões de Argila: ${arg}% (Max: 0.5%)`);
+        
+        if (erros.length > 0) { status = 'refugo'; titulo = '❌ LAUDO REPROVADO'; dim = 'Falha nos ensaios mecânicos/físicos:\n' + erros.join('\n'); acao = '🚫 AÇÃO: Bloquear pedreira/veio para fornecimento.'; }
+        else dim = `Ensaios físicos em conformidade para Litologia: ${lito.toUpperCase()}.`;
     }
-    animarTexto('resultado-box-brita', `${ti}\n\n📏 Análise:\n${d}\n\n${ac}\n\n📄 Procedimento: MAN-VP-T-ETM-ES-0006-05`, s);
+    animarTexto('resultado-box-brita', `${titulo}\n\n📏 Análise:\n${dim}\n\n${acao}\n\n📄 Procedimento: MAN-VP-T-ETM-ES-0006-05`, status);
 }
 
-// === ANÁLISE MADEIRA ===
+// 4. MADEIRA
 function analisarMadeira() {
-    const cat = $('mad-categoria').value;
-    let s = 'aceitavel', ti = '✅ CONFORME', d = '', ac = '✅ AÇÃO: Lote liberado para via.';
+    const cat = document.getElementById('mad-categoria').value;
+    let status = 'aceitavel', titulo = '✅ CONFORME', dim = '', acao = '✅ AÇÃO: Lote liberado para via.';
 
     if (cat === 'fisico') {
-        const cl = $('mad-classe').value, um = V('val-mad-umidade'), dn = V('val-mad-densidade'), rt = V('val-mad-retencao');
-        let er = [];
-        if (um > 30) er.push('Teor de umidade excede o máximo de 30%.');
-        if (cl === '1' && dn > 0 && dn < 750) er.push('Densidade abaixo do mínimo p/ 1ª Classe (750 kg/m³).');
-        if (cl === '2' && dn > 0 && dn < 600) er.push('Densidade abaixo do mínimo p/ 2ª Classe (600 kg/m³).');
-        if (rt > 0 && rt < 9.6) er.push('Retenção CCA abaixo do mínimo (9.6 kg/m³).');
-        if (er.length) { s = 'refugo'; ti = '❌ NÃO CONFORME'; d = er.join('\n'); ac = '🚫 AÇÃO: Recusar recebimento. Falha no tratamento.'; }
-        else d = 'Propriedades físicas e de impregnação preservativa dentro dos limites normativos.';
+        const classe = document.getElementById('mad-classe').value;
+        const umidade = getVal('val-mad-umidade'), densidade = getVal('val-mad-densidade'), retencao = getVal('val-mad-retencao');
+        let erros = [];
+        if (umidade > 30) erros.push('Teor de umidade excede o máximo de 30%.');
+        if (classe === '1' && densidade > 0 && densidade < 750) erros.push('Densidade abaixo do mínimo p/ 1ª Classe (750 kg/m³).');
+        if (classe === '2' && densidade > 0 && densidade < 600) erros.push('Densidade abaixo do mínimo p/ 2ª Classe (600 kg/m³).');
+        if (retencao > 0 && retencao < 9.6) erros.push('Retenção CCA abaixo do mínimo (9.6 kg/m³).');
+        
+        if (erros.length > 0) { status = 'refugo'; titulo = '❌ NÃO CONFORME'; dim = erros.join('\n'); acao = '🚫 AÇÃO: Recusar recebimento. Falha no tratamento.'; }
+        else dim = 'Propriedades físicas e de impregnação preservativa dentro dos limites normativos.';
     } else if (cat === 'defeito') {
-        const tipo = $('mad-tipo-defeito').value;
-        const fix = $('mad-zona-fixacao').checked;
-        const refugoSumario = {
-            podre: 'Dormente com aspecto de apodrecimento.',
-            casca: 'Presença de casca na madeira.',
-            anti_rachante: 'Proteção anti-rachante ausente ou menor que 70% na face do dormente.',
-            amarracao: 'Amarração deficiente (menos de 3 fitas ou sem pontaletes).'
-        };
+        const tipo = document.getElementById('mad-tipo-defeito').value;
+        const naFixacao = document.getElementById('mad-zona-fixacao').checked;
 
-        if (refugoSumario[tipo]) {
-            s = 'refugo'; ti = '❌ REFUGO'; d = refugoSumario[tipo]; ac = '🚫 AÇÃO: Refugo Sumário (Defeito não aceitável).';
-        } else if (tipo === 'dimensoes') {
-            const c = V('val-mad-dim-comp'), l = V('val-mad-dim-larg'), a = V('val-mad-dim-alt');
-            const nc = V('val-mad-nom-comp'), nl = V('val-mad-nom-larg'), na = V('val-mad-nom-alt');
+        if (tipo === 'podre') { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Dormente com aspecto de apodrecimento.'; acao = '🚫 AÇÃO: Refugo Sumário (Defeito não aceitável).'; }
+        else if (tipo === 'casca') { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Presença de casca na madeira.'; acao = '🚫 AÇÃO: Refugo Sumário (Defeito não aceitável).'; }
+        else if (tipo === 'anti_rachante') { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Proteção anti-rachante ausente ou menor que 70% na face do dormente.'; acao = '🚫 AÇÃO: Retornar ao fornecedor (Defeito não aceitável).'; }
+        else if (tipo === 'amarracao') { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Amarração deficiente (menos de 3 fitas ou sem pontaletes).'; acao = '🚫 AÇÃO: Recusar descarga do fardo (Defeito não aceitável).'; }
+        else if (tipo === 'dimensoes') {
+            const c = getVal('val-mad-dim-comp'), l = getVal('val-mad-dim-larg'), a = getVal('val-mad-dim-alt');
+            const nc = getVal('val-mad-nom-comp'), nl = getVal('val-mad-nom-larg'), na = getVal('val-mad-nom-alt');
             let e = [];
             if (c < nc || c > (nc + 0.05)) e.push(`Comprimento fora (Aferido: ${c}m | Nom: ${nc}m | Tol: +5cm / -0cm)`);
             if (l < (nl - 2) || l > (nl + 2)) e.push(`Largura fora (Aferido: ${l}cm | Nom: ${nl}cm | Tol: ±2cm)`);
             if (a < (na - 1) || a > (na + 1)) e.push(`Altura fora (Aferido: ${a}cm | Nom: ${na}cm | Tol: ±1cm)`);
-            if (e.length) { s = 'refugo'; ti = '❌ NÃO CONFORME'; d = e.join('\n'); ac = '🚫 AÇÃO: Dormente dimensionalmente divergente. Refugo.'; }
-            else d = 'Dimensões aferidas estão dentro da tolerância normativa.';
-        } else if (tipo === 'esmoado') {
-            const cd = $('val-mad-esmoado-comp').value, rt = V('val-mad-esmoado-reta'), tp = V('val-mad-esmoado-topo');
-            let mr = 0, mt = 0;
-            if (fix) { mr = cd === '2.00' ? 14 : 15; mt = cd === '2.00' ? 20 : 22; }
-            else { mr = cd === '2.00' ? 9 : 10; mt = cd === '2.00' ? 15 : 17; }
-            if (rt < mr || tp < mt) { s = 'refugo'; ti = '❌ REFUGO (ESMOADO)'; d = `Aferido: Face Reta ${rt}cm | Topo ${tp}cm\nMínimo Exigido: Face Reta ${mr}cm | Topo ${mt}cm`; ac = '🚫 AÇÃO: Esmoado (falta de canto) excessivo. Segregar dormente.'; }
-            else d = `Aferido: Face Reta ${rt}cm | Topo ${tp}cm\n(Mínimos atendidos: ${mr} e ${mt} cm)`;
-        } else if (fix && ['racha_topo', 'racha_centro', 'furos_nos'].includes(tipo)) {
-            s = 'refugo'; ti = '❌ REFUGO'; d = 'Proibida presença de fendas, rachaduras ou furos na zona de fixação.'; ac = '🚫 AÇÃO: Segregar dormente.';
-        } else if (tipo === 'racha_topo') {
-            const c = V('val-mad-comp-racha'), a = V('val-mad-abert-racha');
-            if (c > 15 || a > 2) { s = 'refugo'; ti = '❌ REFUGO'; d = 'Fenda excede limites (Comp. máx: 15cm | Abertura máx: 2mm).'; ac = '🚫 AÇÃO: Segregar dormente.'; }
-            else d = 'Fenda de topo dentro das tolerâncias.';
-        } else if (tipo === 'racha_centro') {
-            const c = V('val-mad-comp-racha'), a = V('val-mad-abert-racha'), p = V('val-mad-prof-racha');
-            if (c > 15 || a > 2 || p > 2) { s = 'refugo'; ti = '❌ REFUGO'; d = 'Rachadura central excede limites (Comp: 15cm | Abertura: 2mm | Prof: 2cm).'; ac = '🚫 AÇÃO: Segregar dormente.'; }
-            else d = 'Rachadura central dentro das tolerâncias normativas.';
-        } else if (tipo === 'furos_nos') {
-            const dm = V('val-mad-diam-furo'), p = V('val-mad-prof-furo');
-            if (dm > 2.5 || p >= 5) { s = 'refugo'; ti = '❌ REFUGO'; d = 'Dimensões excedem limite (Diâm máx: 2.5cm | Prof máx: < 5cm).'; ac = '🚫 AÇÃO: Segregar dormente.'; }
-            else d = 'Furo de broca ou nó cariado dentro das tolerâncias.';
-        } else if (tipo === 'empenamento') {
-            const cd = parseFloat($('val-mad-comp-dormente').value), fl = V('val-mad-flecha'), mx = cd / 2;
-            if (fl > mx) { s = 'refugo'; ti = '❌ REFUGO'; d = `Flecha (${fl} cm) excede o limite de ${mx.toFixed(1)} cm para viga de ${cd.toFixed(2)}m.`; ac = '🚫 AÇÃO: Segregar dormente para descarte.'; }
-            else d = `Empenamento/Arqueamento dentro do limite aceitável (Máx: ${mx.toFixed(1)} cm).`;
+            
+            if (e.length > 0) { status = 'refugo'; titulo = '❌ NÃO CONFORME'; dim = e.join('\n'); acao = '🚫 AÇÃO: Dormente dimensionalmente divergente. Refugo.'; }
+            else dim = 'Dimensões aferidas estão dentro da tolerância normativa.';
+        }
+        else if (tipo === 'esmoado') {
+            const compDorm = document.getElementById('val-mad-esmoado-comp').value;
+            const reta = getVal('val-mad-esmoado-reta'), topo = getVal('val-mad-esmoado-topo');
+            let minReta = 0, minTopo = 0;
+            
+            if (naFixacao) {
+                if (compDorm === '2.00') { minReta = 14; minTopo = 20; } else { minReta = 15; minTopo = 22; }
+            } else {
+                if (compDorm === '2.00') { minReta = 9; minTopo = 15; } else { minReta = 10; minTopo = 17; }
+            }
+            
+            if (reta < minReta || topo < minTopo) {
+                status = 'refugo'; titulo = '❌ REFUGO (ESMOADO)';
+                dim = `Aferido: Face Reta ${reta}cm | Topo ${topo}cm\nMínimo Exigido: Face Reta ${minReta}cm | Topo ${minTopo}cm`;
+                acao = '🚫 AÇÃO: Esmoado (falta de canto) excessivo. Segregar dormente.';
+            } else {
+                dim = `Aferido: Face Reta ${reta}cm | Topo ${topo}cm\n(Mínimos atendidos: ${minReta} e ${minTopo} cm)`;
+            }
+        }
+        else if (naFixacao && (tipo === 'racha_topo' || tipo === 'racha_centro' || tipo === 'furos_nos')) {
+            status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Proibida presença de fendas, rachaduras ou furos na zona de fixação.'; acao = '🚫 AÇÃO: Segregar dormente.';
+        } else {
+            if (tipo === 'racha_topo') {
+                const comp = getVal('val-mad-comp-racha'), abert = getVal('val-mad-abert-racha');
+                if (comp > 15 || abert > 2) { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Fenda excede limites (Comp. máx: 15cm | Abertura máx: 2mm).'; acao = '🚫 AÇÃO: Segregar dormente.'; }
+                else dim = 'Fenda de topo dentro das tolerâncias.';
+            } else if (tipo === 'racha_centro') {
+                const comp = getVal('val-mad-comp-racha'), abert = getVal('val-mad-abert-racha'), prof = getVal('val-mad-prof-racha');
+                if (comp > 15 || abert > 2 || prof > 2) { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Rachadura central excede limites (Comp: 15cm | Abertura: 2mm | Prof: 2cm).'; acao = '🚫 AÇÃO: Segregar dormente.'; }
+                else dim = 'Rachadura central dentro das tolerâncias normativas.';
+            } else if (tipo === 'furos_nos') {
+                const diam = getVal('val-mad-diam-furo'), prof = getVal('val-mad-prof-furo');
+                if (diam > 2.5 || prof >= 5) { status = 'refugo'; titulo = '❌ REFUGO'; dim = 'Dimensões excedem limite (Diâm máx: 2.5cm | Prof máx: < 5cm).'; acao = '🚫 AÇÃO: Segregar dormente.'; }
+                else dim = 'Furo de broca ou nó cariado dentro das tolerâncias.';
+            } else if (tipo === 'empenamento') {
+                const compDorm = parseFloat(document.getElementById('val-mad-comp-dormente').value), flecha = getVal('val-mad-flecha');
+                const flechaMax = compDorm / 2.0;
+                if (flecha > flechaMax) { status = 'refugo'; titulo = '❌ REFUGO'; dim = `Flecha (${flecha} cm) excede o limite de ${flechaMax.toFixed(1)} cm para viga de ${compDorm.toFixed(2)}m.`; acao = '🚫 AÇÃO: Segregar dormente para descarte.'; }
+                else dim = `Empenamento/Arqueamento dentro do limite aceitável (Máx: ${flechaMax.toFixed(1)} cm).`;
+            }
         }
     }
-    animarTexto('resultado-box-madeira', `${ti}\n\n📏 Análise:\n${d}\n\n${ac}\n\n📄 Procedimento: MAN DM T MTE DM 0001`, s);
+    animarTexto('resultado-box-madeira', `${titulo}\n\n📏 Análise:\n${dim}\n\n${acao}\n\n📄 Procedimento: MAN DM T MTE DM 0001`, status);
 }
 
-// === SUBCOMPONENTES ===
+// 5. SUBCOMPONENTES
 const subDados = {
-    pal_branca_tr68: { title: "Palmilha Branca TR68 FAST-CLIP", ref: "ENG-DVP-D183 / INF-FX-0003", m: [{ l: "Medida 1 (mm)", min: 187.5, max: 191.5 }, { l: "Medida 2 (mm)", min: 151, max: 155 }, { l: "Medida 3 (mm)", min: 111.5, max: 114.5 }, { l: "Medida 4 (mm)", min: 5.5, max: 7.5 }] },
-    pal_verde_uic60: { title: "Palmilha Verde UIC60", ref: "ENG-DVP-D135 / INF-FX-0003", m: [{ l: "Medida 1 (mm)", min: 148.5, max: 150 }, { l: "Medida 2 (mm)", min: 113, max: 114 }, { l: "Medida 3 (mm)", min: 7.05, max: 7.55 }] },
-    iso_verde_3510w: { title: "Isolador Lateral Verde 3510W", ref: "ENG-DVP-D136", m: [{ l: "Medida 1 (mm)", min: 61.5, max: 63 }, { l: "Medida 2 (mm)", min: 9.6, max: 10.2 }, { l: "Medida 3 (mm)", min: 7.4, max: 8 }] },
-    iso_amarelo_3510w: { title: "Isolador Lateral Amarelo 3510W", ref: "ENG-DVP-D136", m: [{ l: "Medida 1 (mm)", min: 61.5, max: 63 }, { l: "Medida 2 (mm)", min: 9.6, max: 10.2 }, { l: "Medida 3 (mm)", min: 7.4, max: 8 }] },
-    iso_preto_3502w: { title: "Isolador Lateral Preto 3502W", ref: "ENG-DVP-D084", m: [{ l: "Medida 1 (mm)", min: 61.5, max: 63 }, { l: "Medida 2 (mm)", min: 7.6, max: 8.2 }, { l: "Medida 3 (mm)", min: 7.4, max: 8 }] },
-    iso_branco_pandrol: { title: "Isolador Lateral Branco 8mm (PANDROL)", ref: "ENG-DVP-D084", m: [{ l: "Medida 1 (mm)", min: 61.5, max: 63 }, { l: "Medida 2 (mm)", min: 7.6, max: 8.2 }, { l: "Medida 3 (mm)", min: 7.4, max: 8 }] },
-    iso_branco_3502w: { title: "Isolador Lateral Branco 3502W", ref: "ENG-DVP-D084", m: [{ l: "Medida 1 (mm)", min: 61.5, max: 63 }, { l: "Medida 2 (mm)", min: 7.6, max: 8.2 }, { l: "Medida 3 (mm)", min: 7.4, max: 8 }] },
-    usp_getzner: { title: "UNDER SLEEPER PAD - USP (GETZNER)", ref: "ENG-DVP-D131", m: [{ l: "Comprimento (mm)", min: 1360, max: 1390 }, { l: "Largura (mm)", min: 225, max: 245 }, { l: "Espessura (mm)", min: 7, max: 11 }] },
-    grampo_capa_branca: { title: "Grampo W c/ isolador Capa Branca", ref: "ENG-DVP-T040", m: [{ l: "Medida 1 (mm)", min: 106.5, max: 111 }, { l: "Medida 2 (mm)", min: 15.75, max: 16.25 }, { l: "Medida 3 (mm)", min: 74.5, max: 79 }] },
-    grampo_iso_frontal: { title: "Grampo W c/ isolador frontal", ref: "ENG-DVP-T040", m: [{ l: "Medida 1 (mm)", min: 106.5, max: 111 }, { l: "Medida 2 (mm)", min: 15.75, max: 16.25 }, { l: "Medida 3 (mm)", min: 74.5, max: 79 }] },
-    ombreira_eclip: { title: "Ombreira E-CLIP HFOB02", ref: "ENG-DVP-D139", m: [{ l: "Medida 1 (mm)", min: 73.5, max: 76.5 }, { l: "Medida 2 (mm) [>= 24]", min: 24, max: 999999 }] },
-    ombreira_fastclip: { title: "Ombreira FAST-CLIP HFOB08", ref: "ENG-DVP-D074", m: [{ l: "Medida 1 (mm)", min: 99.75, max: 102.25 }, { l: "Medida 2 (mm)", min: 58.7, max: 60.7 }, { l: "Medida 3 (mm)", min: 95.9, max: 98.1 }, { l: "Medida 4 (mm)", min: 70.3, max: 72.5 }, { l: "Medida 5 (mm)", min: 34.9, max: 36.7 }] },
-    pal_verde_almofada: { title: "Palmilha Verde Almofada 6980", ref: "ENG-DVP-D135", m: [{ l: "Medida 1 (mm)", min: 148.5, max: 150 }, { l: "Medida 2 (mm)", min: 113, max: 114 }, { l: "Medida 3 (mm)", min: 7.05, max: 7.55 }] },
-    pal_branca_almofada: { title: "Palmilha Branca Almofada 7552", ref: "ENG-DVP-D183", m: [{ l: "Medida 1 (mm)", min: 187.5, max: 191.5 }, { l: "Medida 2 (mm)", min: 151, max: 155 }, { l: "Medida 3 (mm)", min: 111.5, max: 114.5 }, { l: "Medida 4 (mm)", min: 5.5, max: 7.5 }] }
+    "pal_branca_tr68": { title: "Palmilha Branca TR68 FAST-CLIP", ref: "ENG-DVP-D183 / INF-FX-0003", m: [{l:"Medida 1 (mm)", min:187.5, max:191.5}, {l:"Medida 2 (mm)", min:151.0, max:155.0}, {l:"Medida 3 (mm)", min:111.5, max:114.5}, {l:"Medida 4 (mm)", min:5.5, max:7.5}] },
+    "pal_verde_uic60": { title: "Palmilha Verde UIC60", ref: "ENG-DVP-D135 / INF-FX-0003", m: [{l:"Medida 1 (mm)", min:148.5, max:150.0}, {l:"Medida 2 (mm)", min:113.0, max:114.0}, {l:"Medida 3 (mm)", min:7.05, max:7.55}] },
+    "iso_verde_3510w": { title: "Isolador Lateral Verde 3510W", ref: "ENG-DVP-D136", m: [{l:"Medida 1 (mm)", min:61.5, max:63.0}, {l:"Medida 2 (mm)", min:9.6, max:10.2}, {l:"Medida 3 (mm)", min:7.4, max:8.0}] },
+    "iso_amarelo_3510w": { title: "Isolador Lateral Amarelo 3510W", ref: "ENG-DVP-D136", m: [{l:"Medida 1 (mm)", min:61.5, max:63.0}, {l:"Medida 2 (mm)", min:9.6, max:10.2}, {l:"Medida 3 (mm)", min:7.4, max:8.0}] },
+    "iso_preto_3502w": { title: "Isolador Lateral Preto 3502W", ref: "ENG-DVP-D084", m: [{l:"Medida 1 (mm)", min:61.5, max:63.0}, {l:"Medida 2 (mm)", min:7.6, max:8.2}, {l:"Medida 3 (mm)", min:7.4, max:8.0}] },
+    "iso_branco_pandrol": { title: "Isolador Lateral Branco 8mm (PANDROL - SAP:121107)", ref: "ENG-DVP-D084", m: [{l:"Medida 1 (mm)", min:61.5, max:63.0}, {l:"Medida 2 (mm)", min:7.6, max:8.2}, {l:"Medida 3 (mm)", min:7.4, max:8.0}] },
+    "iso_branco_3502w": { title: "Isolador Lateral Branco 3502W (SAP:121107)", ref: "ENG-DVP-D084", m: [{l:"Medida 1 (mm)", min:61.5, max:63.0}, {l:"Medida 2 (mm)", min:7.6, max:8.2}, {l:"Medida 3 (mm)", min:7.4, max:8.0}] },
+    "usp_getzner": { title: "UNDER SLEEPER PAD - USP (GETZNER - SAP:126980)", ref: "ENG-DVP-D131", m: [{l:"Comprimento (mm)", min:1360.0, max:1390.0}, {l:"Largura (mm)", min:225.0, max:245.0}, {l:"Espessura (mm)", min:7.0, max:11.0}] },
+    "grampo_capa_branca": { title: "Grampo W c/ isolador Capa Branca (SAP:99604)", ref: "ENG-DVP-T040", m: [{l:"Medida 1 (mm)", min:106.5, max:111.0}, {l:"Medida 2 (mm)", min:15.75, max:16.25}, {l:"Medida 3 (mm)", min:74.5, max:79.0}] },
+    "grampo_iso_frontal": { title: "Grampo W c/ isolador frontal (SAP:99604)", ref: "ENG-DVP-T040", m: [{l:"Medida 1 (mm)", min:106.5, max:111.0}, {l:"Medida 2 (mm)", min:15.75, max:16.25}, {l:"Medida 3 (mm)", min:74.5, max:79.0}] },
+    "ombreira_eclip": { title: "Ombreira E-CLIP HFOB02 (SAP:127542)", ref: "ENG-DVP-D139", m: [{l:"Medida 1 (mm)", min:73.5, max:76.5}, {l:"Medida 2 (mm) [>= 24]", min:24.0, max:999999}] },
+    "ombreira_fastclip": { title: "Ombreira FAST-CLIP HFOB08 (SAP:127406B)", ref: "ENG-DVP-D074", m: [{l:"Medida 1 (mm)", min:99.75, max:102.25}, {l:"Medida 2 (mm)", min:58.7, max:60.7}, {l:"Medida 3 (mm)", min:95.9, max:98.1}, {l:"Medida 4 (mm)", min:70.3, max:72.5}, {l:"Medida 5 (mm)", min:34.9, max:36.7}] },
+    "pal_verde_almofada": { title: "Palmilha Verde Almofada 6980 (SAP:127543)", ref: "ENG-DVP-D135", m: [{l:"Medida 1 (mm)", min:148.5, max:150.0}, {l:"Medida 2 (mm)", min:113.0, max:114.0}, {l:"Medida 3 (mm)", min:7.05, max:7.55}] },
+    "pal_branca_almofada": { title: "Palmilha Branca Almofada 7552 (SAP:109105)", ref: "ENG-DVP-D183", m: [{l:"Medida 1 (mm)", min:187.5, max:191.5}, {l:"Medida 2 (mm)", min:151.0, max:155.0}, {l:"Medida 3 (mm)", min:111.5, max:114.5}, {l:"Medida 4 (mm)", min:5.5, max:7.5}] }
 };
 
 function analisarSub() {
-    const cat = $('sub-categoria').value;
-    if (!cat || !subDados[cat]) return;
+    const cat = document.getElementById('sub-categoria').value;
+    if(!cat || !subDados[cat]) return;
     const item = subDados[cat];
-    let s = 'aceitavel', ti = '✅ CONFORME', d = '', er = [], ac = '✅ AÇÃO: Subcomponente aprovado. Lote liberado.';
+    let status = 'aceitavel', titulo = '✅ CONFORME', dim = '', erros = [], acao = '✅ AÇÃO: Subcomponente aprovado. Lote liberado.';
 
-    item.m.forEach((m, i) => {
-        const v = V(`val-sub-m${i + 1}`);
-        if (v < m.min || v > m.max) er.push(m.max === 999999 ? `- ${m.l}: ${v}mm (Tol: Min ${m.min}mm)` : `- ${m.l}: ${v}mm (Tol: ${m.min} a ${m.max} mm)`);
+    item.m.forEach((medida, index) => {
+        const val = getVal(`val-sub-m${index+1}`);
+        if(val < medida.min || val > medida.max) {
+            if (medida.max === 999999) erros.push(`- ${medida.l}: ${val}mm (Tol: Min ${medida.min}mm)`);
+            else erros.push(`- ${medida.l}: ${val}mm (Tol: ${medida.min} a ${medida.max} mm)`);
+        }
     });
 
-    if (er.length) {
-        s = 'refugo'; ti = '❌ NÃO CONFORME'; d = 'Medidas fora das tolerâncias:\n' + er.join('\n'); ac = '🚫 AÇÃO: Lote dimensionalmente reprovado. Preencher RNC.';
-    } else d = 'Todas as dimensões inspecionadas estão de acordo com o desenho técnico.';
+    if (erros.length > 0) { status = 'refugo'; titulo = '❌ NÃO CONFORME'; dim = 'Medidas fora das tolerâncias:\n' + erros.join('\n'); acao = '🚫 AÇÃO: Lote dimensionalmente reprovado. Preencher RNC.'; }
+    else dim = 'Todas as dimensões inspecionadas estão de acordo com o desenho técnico.';
 
-    animarTexto('resultado-box-sub', `${ti}\n\n${item.title}\n\n📏 Análise:\n${d}\n\n${ac}\n\n📄 Desenho Técnico: ${item.ref}`, s);
+    animarTexto('resultado-box-sub', `${titulo}\n\n${item.title}\n\n📏 Análise:\n${dim}\n\n${acao}\n\n📄 Desenho Técnico: ${item.ref}`, status);
 }
 
-// === CÂMERA ===
-let currentStream = null, laudoAtualTexto = "", categoriaAtual = "", fotoDataUrl = "";
+// === CÂMERA E EXPORTAÇÃO ===
+let currentStream = null;
+let laudoAtualTexto = "";
+let categoriaAtual = "";
+let fotoDataUrl = "";
 
-async function abrirCamera(boxId, cat) {
-    const box = $(boxId);
+async function abrirCamera(boxId, categoria) {
+    const box = document.getElementById(boxId);
     laudoAtualTexto = box.innerText;
-    categoriaAtual = cat;
-    const st = laudoAtualTexto.match(/✅|❌|🔧|⚠️|🚫/), icon = st ? st[0] : '';
-    const dt = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR');
-    $('overlay-texto-visual').innerHTML = `<strong>${icon} LAUDO RUMO - ${cat}</strong><br><span style="font-size:.7rem;opacity:.8">Data: ${dt}</span><br>${laudoAtualTexto.split('\n').slice(0, 3).join('<br>')}...`;
+    categoriaAtual = categoria;
+    
+    const statusMatch = laudoAtualTexto.match(/✅|❌|🔧|⚠️|🚫/);
+    const statusIcon = statusMatch ? statusMatch[0] : '';
+    const dataStr = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR');
+    
+    document.getElementById('overlay-texto-visual').innerHTML = `
+        <strong>${statusIcon} LAUDO RUMO - ${categoria}</strong><br>
+        <span style="font-size:0.7rem; opacity:0.8;">Data: ${dataStr}</span><br>
+        ${laudoAtualTexto.split('\n').slice(0,3).join('<br>')}...
+    `;
 
     showEl('camera-modal', 'flex');
     hideEl('foto-capturada');
@@ -632,17 +717,20 @@ async function abrirCamera(boxId, cat) {
     hideEl('controles-pos-captura');
 
     try {
-        currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        $('video-preview').srcObject = currentStream;
-    } catch (e) {
-        alert("Erro ao acessar a câmera.");
+        currentStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'environment' } 
+        });
+        const videoElement = document.getElementById('video-preview');
+        videoElement.srcObject = currentStream;
+    } catch (err) {
+        alert("Erro ao acessar a câmera. Verifique as permissões do navegador.");
         fecharCamera();
     }
 }
 
 function fecharCamera() {
     if (currentStream) {
-        currentStream.getTracks().forEach(t => t.stop());
+        currentStream.getTracks().forEach(track => track.stop());
         currentStream = null;
     }
     hideEl('camera-modal');
@@ -653,119 +741,172 @@ function retomarCamera() {
     showEl('video-preview');
     showEl('controles-camera', 'flex');
     hideEl('controles-pos-captura');
-    $('overlay-texto-visual').style.display = 'block';
+    document.getElementById('overlay-texto-visual').style.display = 'block';
 }
 
 function tirarFoto() {
-    const v = $('video-preview'), c = $('canvas-render'), x = c.getContext('2d');
-    c.width = v.videoWidth; c.height = v.videoHeight;
-    x.drawImage(v, 0, 0, c.width, c.height);
+    const video = document.getElementById('video-preview');
+    const canvas = document.getElementById('canvas-render');
+    const context = canvas.getContext('2d');
 
-    const u = c.width, ft = u * .028, fd = u * .0168, fb = u * .02016, pd = u * .02, lh = fb * 1.5;
-    const dt = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR');
-    const lines = laudoAtualTexto.split('\n').filter(l => l.trim()).slice(0, 10);
-    const bh = lines.length * lh + ft + fd + pd * 4;
-    const bw = u * .94, sx = u * .03, sy = c.height - bh - u * .03;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    x.fillStyle = "rgba(0,0,0,0.05)";
-    x.beginPath(); x.roundRect(sx, sy, bw, bh, 15); x.fill();
-    x.fillStyle = "#FFD600";
-    x.beginPath(); x.roundRect(sx, sy, u * .01, bh, [15, 0, 0, 15]); x.fill();
+    const baseUnit = canvas.width;
+    const fontSizeTitle = baseUnit * 0.028;
+    const fontSizeDate = baseUnit * 0.0168;
+    const fontSizeBody = baseUnit * 0.02016;
+    const padding = baseUnit * 0.02;
+    const lineHeight = fontSizeBody * 1.5;
 
-    x.shadowColor = "rgba(0,0,0,1)"; x.shadowBlur = 6; x.shadowOffsetX = 2; x.shadowOffsetY = 2; x.textAlign = "center";
-    const cx = c.width / 2, mw = bw - pd * 2;
-    let ty = sy + pd + ft;
+    const dataStr = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR');
+    
+    const linhas = laudoAtualTexto.split('\n').filter(l => l.trim() !== '');
+    const linhasFiltradas = linhas.slice(0, 10);
 
-    x.fillStyle = "#fff"; x.font = `bold ${Math.floor(ft)}px sans-serif`;
-    x.fillText(`INSPEÇÃO RUMO - ${categoriaAtual}`, cx, ty, mw);
-    ty += ft + pd / 2;
-    x.font = `${Math.floor(fd)}px sans-serif`; x.fillStyle = "#FFD600";
-    x.fillText(dt, cx, ty, mw); ty += pd;
-    x.fillStyle = "#fff"; x.font = `bold ${Math.floor(fb)}px sans-serif`;
-    lines.forEach(l => { x.fillText(l, cx, ty, mw); ty += lh; });
+    const boxHeight = (linhasFiltradas.length * lineHeight) + fontSizeTitle + fontSizeDate + (padding * 4);
+    const boxWidth = baseUnit * 0.94;
+    const startX = baseUnit * 0.03;
+    const startY = canvas.height - boxHeight - (baseUnit * 0.03);
 
-    fotoDataUrl = c.toDataURL('image/jpeg', .85);
-    $('foto-capturada').src = fotoDataUrl;
-    showEl('foto-capturada'); hideEl('video-preview');
-    $('overlay-texto-visual').style.display = 'none';
-    hideEl('controles-camera'); showEl('controles-pos-captura', 'flex');
+    context.fillStyle = "rgba(0, 0, 0, 0.05)";
+    context.beginPath();
+    context.roundRect(startX, startY, boxWidth, boxHeight, 15);
+    context.fill();
+
+    context.fillStyle = "#FFD600";
+    context.beginPath();
+    context.roundRect(startX, startY, baseUnit * 0.01, boxHeight, [15, 0, 0, 15]);
+    context.fill();
+
+    context.shadowColor = "rgba(0, 0, 0, 1)";
+    context.shadowBlur = 6;
+    context.shadowOffsetX = 2;
+    context.shadowOffsetY = 2;
+
+    context.textAlign = "center";
+    const textCenterX = canvas.width / 2;
+    const maxWidth = boxWidth - (padding * 2);
+    
+    let textY = startY + padding + fontSizeTitle;
+    
+    context.fillStyle = "white";
+    context.font = "bold " + Math.floor(fontSizeTitle) + "px sans-serif";
+    context.fillText(`INSPEÇÃO RUMO - ${categoriaAtual}`, textCenterX, textY, maxWidth);
+    
+    textY += fontSizeTitle + (padding / 2);
+    context.font = Math.floor(fontSizeDate) + "px sans-serif";
+    context.fillStyle = "#FFD600";
+    context.fillText(dataStr, textCenterX, textY, maxWidth);
+    textY += padding;
+
+    context.fillStyle = "white";
+    context.font = "bold " + Math.floor(fontSizeBody) + "px sans-serif"; 
+    linhasFiltradas.forEach(linha => {
+        context.fillText(linha, textCenterX, textY, maxWidth);
+        textY += lineHeight;
+    });
+
+    fotoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+    const imgEl = document.getElementById('foto-capturada');
+    imgEl.src = fotoDataUrl;
+    showEl('foto-capturada');
+    hideEl('video-preview');
+    document.getElementById('overlay-texto-visual').style.display = 'none';
+    
+    hideEl('controles-camera');
+    showEl('controles-pos-captura', 'flex');
 }
 
 function baixarFotoCarimbada() {
     if (!fotoDataUrl) return;
-    const a = document.createElement('a');
-    a.href = fotoDataUrl;
-    a.download = `Laudo_${categoriaAtual}_${Date.now()}.jpg`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    const link = document.createElement('a');
+    link.href = fotoDataUrl;
+    link.download = `Laudo_${categoriaAtual}_${new Date().getTime()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     alert("✅ Foto salva na sua galeria!");
 }
 
 async function compartilharFotoCarimbada() {
     if (!fotoDataUrl) return;
-    const r = await fetch(fotoDataUrl);
-    const b = await r.blob();
-    const f = new File([b], "laudo_inspecao.jpg", { type: "image/jpeg" });
-    if (navigator.share && navigator.canShare({ files: [f] })) {
-        try { await navigator.share({ files: [f], title: 'Laudo Rumo', text: `Evidência de Inspeção - ${categoriaAtual}` }); } catch (e) { }
+    const res = await fetch(fotoDataUrl);
+    const blob = await res.blob();
+    const file = new File([blob], "laudo_inspecao.jpg", { type: "image/jpeg" });
+
+    if (navigator.share && navigator.canShare({ files: [file] })) {
+        try {
+            await navigator.share({
+                files: [file],
+                title: 'Laudo Rumo',
+                text: `Evidência de Inspeção - ${categoriaAtual}`
+            });
+        } catch (error) {
+            console.log('Compartilhamento cancelado ou falhou', error);
+        }
     } else {
-        alert("⚠️ Seu navegador não suporta envio direto de imagem. Clique em SALVAR e envie pelo WhatsApp.");
+        alert("⚠️ Seu navegador não suporta envio direto de imagem. Por favor, clique em SALVAR e envie pelo WhatsApp.");
     }
 }
 
-function compartilharWhatsApp(boxId, cat) {
-    const t = $(boxId).innerText;
-    const d = new Date().toLocaleDateString('pt-BR');
-    const h = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    window.open(`https://wa.me/?text=${encodeURIComponent(`*INSPEÇÃO DE QUALIDADE - RUMO*\n📍 *Categoria:* ${cat}\n📅 *Data:* ${d} às ${h}\n\n${t}`)}`, '_blank');
+function compartilharWhatsApp(boxId, categoria) {
+    const box = document.getElementById(boxId);
+    const textoLimpo = box.innerText;
+    const dataAtual = new Date().toLocaleDateString('pt-BR');
+    const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    
+    const cabecalho = `*INSPEÇÃO DE QUALIDADE - RUMO*\n📍 *Categoria:* ${categoria}\n📅 *Data:* ${dataAtual} às ${horaAtual}\n\n`;
+    const mensagem = encodeURIComponent(cabecalho + textoLimpo);
+    window.open(`https://wa.me/?text=${mensagem}`, '_blank');
 }
 
-// === LOCAL STORAGE ===
+// === STORAGE (SALVAR E CARREGAR DADOS) ===
 function salvarDadosLocal() {
-    const inputs = document.querySelectorAll('input:not([type="password"]),select');
-    const d = {};
-    inputs.forEach(i => {
-        if (i.id) d[i.id] = i.type === 'checkbox' ? i.checked : i.value;
+    const inputs = document.querySelectorAll('input:not([type="password"]), select');
+    const dados = {};
+    inputs.forEach(input => {
+        if (input.id) dados[input.id] = input.type === 'checkbox' ? input.checked : input.value;
     });
-    d.sessao_ativa = true;
-    localStorage.setItem('rumoInspeccaoDados', JSON.stringify(d));
+    dados['sessao_ativa'] = true; 
+    localStorage.setItem('rumoInspeccaoDados', JSON.stringify(dados));
 }
 
 function carregarDadosLocal() {
-    const s = localStorage.getItem('rumoInspeccaoDados');
-    if (s) {
-        const d = JSON.parse(s);
-        for (const id in d) {
-            const el = $(id);
-            if (el) {
-                if (el.type === 'checkbox') el.checked = d[id];
-                else el.value = d[id];
-            }
+    const dadosSalvos = localStorage.getItem('rumoInspeccaoDados');
+    if (dadosSalvos) {
+        const dados = JSON.parse(dadosSalvos);
+        for (const id in dados) {
+            const input = document.getElementById(id);
+            if (input) { if (input.type === 'checkbox') input.checked = dados[id]; else input.value = dados[id]; }
         }
-        if (d['tipo-defeito']) atualizarOpcoes();
+        
+        if(dados['tipo-defeito']) atualizarOpcoes();
         ['amv-componente', 'mad-categoria', 'brita-categoria', 'sub-categoria', 'report-semana', 'report-area'].forEach(id => {
-            if (d[id]) {
-                const el = $(id);
-                if (el) el.dispatchEvent(new Event('change'));
+            if(dados[id]) {
+                const elem = document.getElementById(id);
+                if (elem) elem.dispatchEvent(new Event('change'));
             }
         });
-        if (d.sessao_ativa) {
-            hideEl('login-screen');
-            showEl('main-layout', 'flex');
-            if (innerWidth <= 768) {
-                $('sidebar').classList.add('hidden');
-                showEl('toggle-sidebar-btn', 'flex');
-            }
+
+        if (dados['sessao_ativa']) {
+            hideEl('login-screen'); showEl('main-layout', 'flex');
+            if (window.innerWidth <= 768) { document.getElementById('sidebar').classList.add('hidden'); showEl('toggle-sidebar-btn', 'flex'); }
         }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarDadosLocal();
-    document.querySelectorAll('input:not([type="password"]),select').forEach(i => {
-        i.addEventListener('change', salvarDadosLocal);
-        i.addEventListener('input', salvarDadosLocal);
+    document.querySelectorAll('input:not([type="password"]), select').forEach(input => {
+        input.addEventListener('change', salvarDadosLocal);
+        input.addEventListener('input', salvarDadosLocal);
     });
-    window.onclick = e => {
-        if (e.target === $('modal-ajuda-visual')) fecharAjuda();
-    };
+    
+    window.onclick = function(event) {
+        const modal = document.getElementById('modal-ajuda-visual');
+        if (event.target == modal) { fecharAjuda(); }
+    }
 });
