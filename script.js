@@ -132,8 +132,8 @@ const dadosReport = {
         `,
         "sub": `
             <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Sem Dados de Subcomponentes</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Nenhum dado de inspeção de Subcomponentes Metálicos/Plásticos disponível por enquanto.</p>
             </div>
         `,
         "rnc": `
@@ -255,8 +255,8 @@ const dadosReport = {
         `,
         "sub": `
             <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Sem Dados de Subcomponentes</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Nenhum dado de inspeção de Subcomponentes Metálicos/Plásticos disponível por enquanto.</p>
             </div>
         `,
         "rnc": `
@@ -267,7 +267,7 @@ const dadosReport = {
                 <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
             </div>
             <div class="chart-container">
-                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 5)</h3>
                 <div class="chart-bar-row">
                     <div class="chart-label">Pandolfi</div>
                     <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
@@ -389,8 +389,8 @@ const dadosReport = {
         `,
         "sub": `
             <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Sem Dados de Subcomponentes</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Nenhum dado de inspeção de Subcomponentes Metálicos/Plásticos disponível por enquanto.</p>
             </div>
         `,
         "rnc": `
@@ -512,8 +512,8 @@ const dadosReport = {
         `,
         "sub": `
             <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Sem Dados de Subcomponentes</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Nenhum dado de inspeção de Subcomponentes Metálicos/Plásticos disponível por enquanto.</p>
             </div>
         `,
         "rnc": `
@@ -608,8 +608,8 @@ const dadosReport = {
         `,
         "sub": `
             <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Sem Dados de Subcomponentes</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Nenhum dado de inspeção de Subcomponentes Metálicos/Plásticos disponível por enquanto.</p>
             </div>
         `,
         "rnc": `
@@ -727,8 +727,8 @@ const dadosReport = {
         `,
         "sub": `
             <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Sem Dados de Subcomponentes</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Nenhum dado de inspeção de Subcomponentes Metálicos/Plásticos disponível por enquanto.</p>
             </div>
         `,
         "rnc": `
@@ -752,7 +752,7 @@ function atualizarReport() {
             container.innerHTML = `
                 <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
                     <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados da Semana ${semana} não disponíveis ainda.</h3>
-                    <p style="color:var(--text-muted); font-size: 0.95rem;">Por favor, envie as imagens atualizadas do dashboard para que o sistema possa processá-las.</p>
+                    <p style="color:var(--text-muted); font-size: 0.95rem;">Por favor, selecione outra área ou semana para visualização.</p>
                 </div>
             `;
         }
