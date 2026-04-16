@@ -28,661 +28,717 @@ function navegar(elemento, idSecao) {
 function toggleSidebar() { document.getElementById('sidebar').classList.remove('hidden'); hideEl('toggle-sidebar-btn'); }
 
 // === REPORT SEMANAL (DADOS DOS DASHBOARDS) ===
-        const dadosReport = {
-            "15": {
-                "amv": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">11</div></div>
-                        <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">9</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
+const dadosReport = {
+    "15": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">11</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">9</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ibrafer</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 81%;"></div></div>
+                    <div class="chart-value">9</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 19%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">3687</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">3626</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">61</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">95.3%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 67.2%;"></div></div>
+                    <div class="chart-value">41</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Outros</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 18%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Trincas</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 11.4%;"></div></div>
+                    <div class="chart-value">7</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Quebras / USP</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 3.2%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1365</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">1294</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">71</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">95%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi Madeiras</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 67.6%;"></div></div>
+                    <div class="chart-value">48</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tres Guri</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 32.4%;"></div></div>
+                    <div class="chart-value">23</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">52</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">48</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">4</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">92%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 92.3%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 7.7%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ibrafer</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 81%;"></div></div>
-                            <div class="chart-value">9</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">BR Parts</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 19%;"></div></div>
-                            <div class="chart-value">2</div>
-                        </div>
+                    <div class="chart-value">39</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 92.3%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 7.7%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                `,
-                "concreto": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">3687</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">3626</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">61</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">95.3%</div></div>
+                    <div class="chart-value">13</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "rnc": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">20</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">17</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">1</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">2</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">19</div>
+                </div>
+            </div>
+        `
+    },
+    "14": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">40</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">7</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
+                    <div class="chart-value">40</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">4.660</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">4.452</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">208</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value success">95,54%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Trincas</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 88.7%;"></div></div>
+                    <div class="chart-value">182</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.9%;"></div></div>
+                    <div class="chart-value">10</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Quebras</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.9%;"></div></div>
+                    <div class="chart-value">10</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Outros</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 1.5%;"></div></div>
+                    <div class="chart-value">3</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1.782</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">1.476</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">306</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value warning">86%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 69.6%;"></div></div>
+                    <div class="chart-value">213</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Larssen</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 20.6%;"></div></div>
+                    <div class="chart-value">63</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 6.2%;"></div></div>
+                    <div class="chart-value">19</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tres Guri</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 3.6%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">24</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">24</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
+                    <div class="chart-value">18</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
+                    <div class="chart-value">6</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "rnc": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">78</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">10</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">17</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Larssen</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 88%;"></div></div>
+                    <div class="chart-value">15</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 64%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Garcia</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 47%;"></div></div>
+                    <div class="chart-value">8</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tratanorte</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 29%;"></div></div>
+                    <div class="chart-value">5</div>
+                </div>
+            </div>
+        `
+    },
+    "13": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">52</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">22</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">98%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 71.1%;"></div></div>
+                    <div class="chart-value">37</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ibrafer</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 15.3%;"></div></div>
+                    <div class="chart-value">8</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Hewitt</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 13.6%;"></div></div>
+                    <div class="chart-value">7</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">-</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">-</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados (Cavan)</div><div class="stat-value danger">33</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 13)</div><div class="stat-value success">99,3%</div></div>
+            </div>
+            <div class="stat-card" style="text-align:center; padding: 20px; grid-column: 1 / -1; margin-bottom: 15px;">
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Detalhamento por defeito (Vazios, Trincas, etc.) não apresentado isoladamente nas imagens fonte da Semana 13.</p>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1.064</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">955</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">109</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 13)</div><div class="stat-value success">91%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 53.2%;"></div></div>
+                    <div class="chart-value">58</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 42.2%;"></div></div>
+                    <div class="chart-value">46</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tres Guri</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.6%;"></div></div>
+                    <div class="chart-value">5</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">71</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">62</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">9</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 13)</div><div class="stat-value warning">87%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 90.7%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 9.3%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Vazios</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 67.2%;"></div></div>
-                            <div class="chart-value">41</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Outros</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 18%;"></div></div>
-                            <div class="chart-value">11</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Trincas</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 11.4%;"></div></div>
-                            <div class="chart-value">7</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Quebras / USP</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 3.2%;"></div></div>
-                            <div class="chart-value">2</div>
-                        </div>
+                    <div class="chart-value">54</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 76.5%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 23.5%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                `,
-                "madeira": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1365</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">1294</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">71</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">95%</div></div>
+                    <div class="chart-value">17</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "rnc": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">77</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">9</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">17</div>
+                </div>
+            </div>
+        `
+    },
+    "12": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">26</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">10</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Tempo</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 42.3%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 26.9%;"></div></div>
+                    <div class="chart-value">7</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Panfer</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 23.1%;"></div></div>
+                    <div class="chart-value">6</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ibrafer</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 7.7%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">5.177</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">5.153</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">24</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 12)</div><div class="stat-value success">99,54%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 100%;"></div></div>
+                    <div class="chart-value">21</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">2.664</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">2.370</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">294</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 12)</div><div class="stat-value success">90%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 43.2%;"></div></div>
+                    <div class="chart-value">127</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">J. Maier</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 33%;"></div></div>
+                    <div class="chart-value">97</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 21.4%;"></div></div>
+                    <div class="chart-value">63</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granoski</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 2.4%;"></div></div>
+                    <div class="chart-value">7</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">36</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">36</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 12)</div><div class="stat-value success">100%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
+                    <div class="chart-value">27</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
+                    <div class="chart-value">9</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "rnc": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">77</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">9</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">17</div>
+                </div>
+            </div>
+        `
+    },
+    "11": {
+        "amv": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel AMV não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado (Cavan)</div><div class="stat-value">4.092</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">4.081</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">11</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 11)</div><div class="stat-value success">99,73%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 40%;"></div></div>
+                    <div class="chart-value">4</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Trincas</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 30%;"></div></div>
+                    <div class="chart-value">3</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Outros</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 20%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Quebras</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 10%;"></div></div>
+                    <div class="chart-value">1</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 11)</div><div class="stat-value success">91%</div></div>
+            </div>
+            <div class="stat-card" style="text-align:center; padding: 20px; grid-column: 1 / -1; margin-bottom: 15px;">
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel detalhado com volume de inspecionados/aprovados e quebra por fornecedor não disponibilizado.</p>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">40</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">37</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">3</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 11)</div><div class="stat-value success">92,5%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 96.6%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 3.3%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi Madeiras</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 67.6%;"></div></div>
-                            <div class="chart-value">48</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Tres Guri</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 32.4%;"></div></div>
-                            <div class="chart-value">23</div>
-                        </div>
+                    <div class="chart-value">30</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 80%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 20%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                `,
-                "lastro": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">52</div></div>
-                        <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">48</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">4</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 15)</div><div class="stat-value success">92%</div></div>
+                    <div class="chart-value">10</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "rnc": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">76</div></div>
+                <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
+                <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">8</div></div>
+                <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
+                    <div class="chart-value">17</div>
+                </div>
+            </div>
+        `
+    },
+    "10": {
+        "amv": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">11</div></div>
+                <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">3</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value danger">69%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">BR Parts</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
+                    <div class="chart-value">11</div>
+                </div>
+            </div>
+        `,
+        "concreto": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Total Fabricado (Cavan)</div><div class="stat-value">3.288</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">3.280</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">8</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 10)</div><div class="stat-value success">99,75%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Vazios</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 66.6%;"></div></div>
+                    <div class="chart-value">2</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Quebras</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 33.3%;"></div></div>
+                    <div class="chart-value">1</div>
+                </div>
+            </div>
+        `,
+        "madeira": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">3.332</div></div>
+                <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">2.891</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">441</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 10)</div><div class="stat-value warning">89%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Larssen</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 49.2%;"></div></div>
+                    <div class="chart-value">217</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Pandolfi</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 32.4%;"></div></div>
+                    <div class="chart-value">143</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ricken</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 12.9%;"></div></div>
+                    <div class="chart-value">57</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Ecoline</div>
+                    <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 5.4%;"></div></div>
+                    <div class="chart-value">24</div>
+                </div>
+            </div>
+        `,
+        "lastro": `
+            <div class="dashboard-grid">
+                <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">64</div></div>
+                <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">61</div></div>
+                <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">3</div></div>
+                <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 10)</div><div class="stat-value success">95,31%</div></div>
+            </div>
+            <div class="chart-container">
+                <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
+                <div class="chart-bar-row">
+                    <div class="chart-label">Granulometria</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 97.9%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 2.1%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granulometria</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 92.3%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 7.7%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">39</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">F. Fragmentos</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 92.3%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 7.7%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">13</div>
-                        </div>
+                    <div class="chart-value">48</div>
+                </div>
+                <div class="chart-bar-row">
+                    <div class="chart-label">F. Fragmentos</div>
+                    <div class="chart-bar-bg">
+                        <div class="chart-bar-fill success" style="width: 87.5%; float: left; border-radius: 8px 0 0 8px;"></div>
+                        <div class="chart-bar-fill danger" style="width: 12.5%; float: left; border-radius: 0 8px 8px 0;"></div>
                     </div>
-                `,
-                "sub": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">20</div></div>
-                        <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">17</div></div>
-                        <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">1</div></div>
-                        <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">2</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
-                            <div class="chart-value">19</div>
-                        </div>
-                    </div>
-                `
-            },
-            "14": {
-                "amv": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">40</div></div>
-                        <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">7</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">BR Parts</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
-                            <div class="chart-value">40</div>
-                        </div>
-                    </div>
-                `,
-                "concreto": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">4.660</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">4.452</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">208</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value success">95,54%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Trincas</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 88.7%;"></div></div>
-                            <div class="chart-value">182</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Vazios</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.9%;"></div></div>
-                            <div class="chart-value">10</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Quebras</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.9%;"></div></div>
-                            <div class="chart-value">10</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Outros</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 1.5%;"></div></div>
-                            <div class="chart-value">3</div>
-                        </div>
-                    </div>
-                `,
-                "madeira": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1.782</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">1.476</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">306</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value warning">86%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 69.6%;"></div></div>
-                            <div class="chart-value">213</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Larssen</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 20.6%;"></div></div>
-                            <div class="chart-value">63</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ricken</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 6.2%;"></div></div>
-                            <div class="chart-value">19</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Tres Guri</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 3.6%;"></div></div>
-                            <div class="chart-value">11</div>
-                        </div>
-                    </div>
-                `,
-                "lastro": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">24</div></div>
-                        <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">24</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 14)</div><div class="stat-value success">100%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granulometria</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
-                            <div class="chart-value">18</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">F. Fragmentos</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
-                            <div class="chart-value">6</div>
-                        </div>
-                    </div>
-                `,
-                "sub": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">78</div></div>
-                        <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
-                        <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">10</div></div>
-                        <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
-                            <div class="chart-value">17</div>
-                        </div>
-                    </div>
-                `
-            },
-            "13": {
-                "amv": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">52</div></div>
-                        <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">22</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">98%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">BR Parts</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 71.1%;"></div></div>
-                            <div class="chart-value">37</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ibrafer</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 15.3%;"></div></div>
-                            <div class="chart-value">8</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Hewitt</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 13.6%;"></div></div>
-                            <div class="chart-value">7</div>
-                        </div>
-                    </div>
-                `,
-                "concreto": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">-</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">-</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados (Cavan)</div><div class="stat-value danger">33</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 13)</div><div class="stat-value success">99,3%</div></div>
-                    </div>
-                    <div class="stat-card" style="text-align:center; padding: 20px; grid-column: 1 / -1; margin-bottom: 15px;">
-                        <p style="color:var(--text-muted); font-size: 0.95rem;">Detalhamento por defeito (Vazios, Trincas, etc.) não apresentado isoladamente nas imagens fonte da Semana 13.</p>
-                    </div>
-                `,
-                "madeira": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">1.064</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">955</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">109</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 13)</div><div class="stat-value success">91%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 53.2%;"></div></div>
-                            <div class="chart-value">58</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ricken</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 42.2%;"></div></div>
-                            <div class="chart-value">46</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Tres Guri</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 4.6%;"></div></div>
-                            <div class="chart-value">5</div>
-                        </div>
-                    </div>
-                `,
-                "lastro": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">71</div></div>
-                        <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">62</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">9</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 13)</div><div class="stat-value warning">87%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granulometria</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 90.7%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 9.3%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">54</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">F. Fragmentos</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 76.5%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 23.5%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">17</div>
-                        </div>
-                    </div>
-                `,
-                "sub": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">77</div></div>
-                        <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
-                        <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">9</div></div>
-                        <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
-                            <div class="chart-value">17</div>
-                        </div>
-                    </div>
-                `
-            },
-            "12": {
-                "amv": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">26</div></div>
-                        <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">10</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value success">100%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Tempo</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 42.3%;"></div></div>
-                            <div class="chart-value">11</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">BR Parts</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 26.9%;"></div></div>
-                            <div class="chart-value">7</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Panfer</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 23.1%;"></div></div>
-                            <div class="chart-value">6</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ibrafer</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 7.7%;"></div></div>
-                            <div class="chart-value">2</div>
-                        </div>
-                    </div>
-                `,
-                "concreto": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total Fabricado</div><div class="stat-value">5.177</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">5.153</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">24</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 12)</div><div class="stat-value success">99,54%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Vazios</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 100%;"></div></div>
-                            <div class="chart-value">21</div>
-                        </div>
-                    </div>
-                `,
-                "madeira": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">2.664</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">2.370</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">294</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 12)</div><div class="stat-value success">90%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 43.2%;"></div></div>
-                            <div class="chart-value">127</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">J. Maier</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 33%;"></div></div>
-                            <div class="chart-value">97</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ricken</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 21.4%;"></div></div>
-                            <div class="chart-value">63</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granoski</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 2.4%;"></div></div>
-                            <div class="chart-value">7</div>
-                        </div>
-                    </div>
-                `,
-                "lastro": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">36</div></div>
-                        <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">36</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 12)</div><div class="stat-value success">100%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granulometria</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
-                            <div class="chart-value">27</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">F. Fragmentos</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill success" style="width: 100%;"></div></div>
-                            <div class="chart-value">9</div>
-                        </div>
-                    </div>
-                `,
-                "sub": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">77</div></div>
-                        <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
-                        <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">9</div></div>
-                        <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
-                            <div class="chart-value">17</div>
-                        </div>
-                    </div>
-                `
-            },
-            "11": {
-                "amv": `
-                    <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                        <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                        <p style="color:var(--text-muted); font-size: 0.95rem;">Painel AMV não disponibilizado nas fontes desta semana.</p>
-                    </div>
-                `,
-                "concreto": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total Fabricado (Cavan)</div><div class="stat-value">4.092</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">4.081</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">11</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 11)</div><div class="stat-value success">99,73%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Vazios</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 40%;"></div></div>
-                            <div class="chart-value">4</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Trincas</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 30%;"></div></div>
-                            <div class="chart-value">3</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Outros</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 20%;"></div></div>
-                            <div class="chart-value">2</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Quebras</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 10%;"></div></div>
-                            <div class="chart-value">1</div>
-                        </div>
-                    </div>
-                `,
-                "madeira": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 11)</div><div class="stat-value success">91%</div></div>
-                    </div>
-                    <div class="stat-card" style="text-align:center; padding: 20px; grid-column: 1 / -1; margin-bottom: 15px;">
-                        <p style="color:var(--text-muted); font-size: 0.95rem;">Painel detalhado com volume de inspecionados/aprovados e quebra por fornecedor não disponibilizado.</p>
-                    </div>
-                `,
-                "lastro": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">40</div></div>
-                        <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">37</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">3</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 11)</div><div class="stat-value success">92,5%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granulometria</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 96.6%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 3.3%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">30</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">F. Fragmentos</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 80%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 20%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">10</div>
-                        </div>
-                    </div>
-                `,
-                "sub": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total de Registros (RNCs)</div><div class="stat-value">76</div></div>
-                        <div class="stat-card"><div class="stat-label">Concluídos</div><div class="stat-value success">63</div></div>
-                        <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value warning">8</div></div>
-                        <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value danger">5</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Registros por Fornecedor (Top 1)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill warning" style="width: 100%;"></div></div>
-                            <div class="chart-value">17</div>
-                        </div>
-                    </div>
-                `
-            },
-            "10": {
-                "amv": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Peças Inspecionadas</div><div class="stat-value">11</div></div>
-                        <div class="stat-card"><div class="stat-label">Solicitação de Ajustes</div><div class="stat-value warning">3</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovadas</div><div class="stat-value danger">0</div></div>
-                        <div class="stat-card"><div class="stat-label">Aderência de Inspeção</div><div class="stat-value danger">69%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Inspecionadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">BR Parts</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill" style="width: 100%;"></div></div>
-                            <div class="chart-value">11</div>
-                        </div>
-                    </div>
-                `,
-                "concreto": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Total Fabricado (Cavan)</div><div class="stat-value">3.288</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">3.280</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">8</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 10)</div><div class="stat-value success">99,75%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Reprovas no Detalhado (Cavan)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Vazios</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 66.6%;"></div></div>
-                            <div class="chart-value">2</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Quebras</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 33.3%;"></div></div>
-                            <div class="chart-value">1</div>
-                        </div>
-                    </div>
-                `,
-                "madeira": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Inspecionados</div><div class="stat-value">3.332</div></div>
-                        <div class="stat-card"><div class="stat-label">Aprovados</div><div class="stat-value success">2.891</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">441</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 10)</div><div class="stat-value warning">89%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Peças Reprovadas por Fornecedor</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Larssen</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 49.2%;"></div></div>
-                            <div class="chart-value">217</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Pandolfi</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 32.4%;"></div></div>
-                            <div class="chart-value">143</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ricken</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 12.9%;"></div></div>
-                            <div class="chart-value">57</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Ecoline</div>
-                            <div class="chart-bar-bg"><div class="chart-bar-fill danger" style="width: 5.4%;"></div></div>
-                            <div class="chart-value">24</div>
-                        </div>
-                    </div>
-                `,
-                "lastro": `
-                    <div class="dashboard-grid">
-                        <div class="stat-card"><div class="stat-label">Ensaios Realizados</div><div class="stat-value">64</div></div>
-                        <div class="stat-card"><div class="stat-label">Ensaios Aprovados</div><div class="stat-value success">61</div></div>
-                        <div class="stat-card"><div class="stat-label">Reprovados</div><div class="stat-value danger">3</div></div>
-                        <div class="stat-card"><div class="stat-label">Tx Aprovação (Sem. 10)</div><div class="stat-value success">95,31%</div></div>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px; font-size: 1.1rem; color: var(--text-title); text-align: center;">Quantidade de Ensaios por Tipo (Aprovados vs Reprovados)</h3>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">Granulometria</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 97.9%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 2.1%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">48</div>
-                        </div>
-                        <div class="chart-bar-row">
-                            <div class="chart-label">F. Fragmentos</div>
-                            <div class="chart-bar-bg">
-                                <div class="chart-bar-fill success" style="width: 87.5%; float: left; border-radius: 8px 0 0 8px;"></div>
-                                <div class="chart-bar-fill danger" style="width: 12.5%; float: left; border-radius: 0 8px 8px 0;"></div>
-                            </div>
-                            <div class="chart-value">16</div>
-                        </div>
-                    </div>
-                `,
-                "sub": `
-                    <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
-                        <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
-                        <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de RNC acumulativo não especificado/disponível para a semana 10.</p>
-                    </div>
-                `
-            }
-        };
+                    <div class="chart-value">16</div>
+                </div>
+            </div>
+        `,
+        "sub": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de inspeção de subcomponentes não disponibilizado nas fontes desta semana.</p>
+            </div>
+        `,
+        "rnc": `
+            <div class="stat-card" style="text-align:center; padding: 40px; grid-column: 1 / -1;">
+                <h3 style="color:var(--text-title); margin-bottom: 10px;">Dados Não Disponibilizados</h3>
+                <p style="color:var(--text-muted); font-size: 0.95rem;">Painel de RNC acumulativo não especificado/disponível para a semana 10.</p>
+            </div>
+        `
+    }
+};
 
 function atualizarReport() {
     const semana = document.getElementById('report-semana').value;
