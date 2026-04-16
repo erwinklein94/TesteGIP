@@ -536,8 +536,14 @@ background:linear-gradient(90deg,transparent,var(–rumo-lime));opacity:.3;
 
 /* RESPONSIVO */
 @media(max-width:768px){
-aside{position:fixed;height:100vh;z-index:1000;left:0;top:0;width:282px;}
-main{padding:84px 20px 24px}
+aside{
+position:fixed;height:100vh;z-index:1000;
+left:0;top:0;width:282px;
+transform:translateX(-100%);
+}
+aside:not(.hidden){transform:translateX(0)}
+main{padding:84px 20px 24px;width:100%}
+#toggle-sidebar-btn{display:flex!important}
 .dimensoes-grid,.botoes-acao{grid-template-columns:1fr;gap:12px}
 h1{font-size:1.7rem}
 .card{padding:24px 20px}
@@ -867,11 +873,11 @@ function hideAll(s){document.querySelectorAll(s).forEach(e=>e.classList.add('esc
 function showEl(id,t='block'){const e=$(id);if(e){e.classList.remove('escondido');e.style.display=t}}
 function hideEl(id){const e=$(id);if(e)e.classList.add('escondido')}
 
-function validarAcesso(){if($('user-password').value.trim()==='1272'){hideEl('login-screen');showEl('main-layout','flex');if(innerWidth<=768){$('sidebar').classList.add('hidden');showEl('toggle-sidebar-btn','flex')}}else showEl('error-msg')}
+function validarAcesso(){if($('user-password').value.trim()==='1272'){hideEl('login-screen');showEl('main-layout','flex');if(innerWidth<=768){$('sidebar').classList.add('hidden')}}else showEl('error-msg')}
 function fazerLogout(){if(confirm("Deseja realmente sair e limpar os dados locais?")){localStorage.removeItem('rumoInspeccaoDados');location.reload()}}
 function sugerirMudanca(){const msg=encodeURIComponent("Olá Erwin, gostaria de sugerir uma mudança / melhoria para o Guia do Inspetor Padrão RUMO:\n\n");window.open(`https://wa.me/5541992581521?text=${msg}`,'_blank')}
-function navegar(el,sec){document.querySelectorAll('.content-section,.menu-item').forEach(e=>e.classList.remove('active'));$(sec).classList.add('active');el.classList.add('active');if(innerWidth<=768){$('sidebar').classList.add('hidden');showEl('toggle-sidebar-btn','flex')}}
-function toggleSidebar(){$('sidebar').classList.remove('hidden');hideEl('toggle-sidebar-btn')}
+function navegar(el,sec){document.querySelectorAll('.content-section,.menu-item').forEach(e=>e.classList.remove('active'));$(sec).classList.add('active');el.classList.add('active');if(innerWidth<=768){$('sidebar').classList.add('hidden')}}
+function toggleSidebar(){$('sidebar').classList.toggle('hidden')}
 
 const PROCEDIMENTOS={
     amv:{nome:"AMV & Componentes",icone:"⚙️",itens:{agulha:{titulo:"Ponta da Agulha (Perfil 5100)",codigo:"ETMs 0005, 0007, 0008, 0009",desc:"Meça a espessura da ponta da agulha a exatos 15mm do início da usinagem. O desgaste não pode exceder o estipulado. Tolerância máxima: 3.9mm (Nominal AREMA: 3.1mm + Tol: 0.8mm). Valores entre 3.7mm e 3.9mm exigem monitoramento programado. Acima de 3.9mm há risco de descarrilamento: bloquear e substituir."},rolete:{titulo:"Roletes (Viga I)",codigo:"EM-SPE-072 (Item 5.2)",desc:"Altura máxima do rolete em relação à base da agulha: ≤ 2.0mm. Acima desse valor necessita calibração pela equipe de via."},coxin:{titulo:"Coxins dos Roletes (Dureza)",codigo:"EM-SPE-072 (Item 5.3.1)",desc:"Dureza Shore A do coxin deve estar entre 88 e 92. Fora dessa faixa, rejeitar lote de coxins e retornar ao fornecedor."},jacare_canal:{titulo:"Jacaré (Profundidade do Canal)",codigo:"ETMs 0005, 0007, 0008, 0009",desc:"Profundidade do canal deve ser aferida no núcleo do jacaré de aço manganês: 53 ± 2 mm (faixa 51 a 55 mm). Fora da tolerância: solicitar esmerilhamento ou preenchimento de solda."},jacare_dureza:{titulo:"Jacaré (Dureza Brinell)",codigo:"ETMs 0008, 0009",desc:"Dureza Brinell na área de impacto: 352 a 418 HB. Fora da tolerância exigida: bloquear lote do Jacaré e abrir RNC."},fixacao_concreto:{titulo:"Fixação AMV Concreto (Pressão Grampo)",codigo:"ENG-DSV-VP-ETM-A0019",desc:"Pressão do Grampo Eclip-2009: 1200 ± 300 kgf (faixa 900 a 1500 kgf). Fora da faixa: substituir grampos fadigados na região."},cilindro:{titulo:"Cilindro de Mola",codigo:"EM-SPE-026",desc:"Pressão mínima de travamento: 500 kgf. Tempo de acionamento com 260 kg: entre 10 e 12 segundos. Fora da norma: ajuste de válvula do cilindro pela manutenção."},batefica:{titulo:"Aparelho Talonável Bate-Fica",codigo:"EM-SPE-017",desc:"Deslocamento verificado das agulhas: 100 a 121 mm. Fora da tolerância: calibrar hastes do aparelho Bate-Fica."}}},
@@ -1011,7 +1017,7 @@ function compartilharWhatsApp(boxId,cat){const t=$(boxId).innerText,d=new Date()
 
 // STORAGE
 function salvarDadosLocal(){const inputs=document.querySelectorAll('input:not([type="password"]),select'),d={};inputs.forEach(i=>{if(i.id)d[i.id]=i.type==='checkbox'?i.checked:i.value});d.sessao_ativa=true;localStorage.setItem('rumoInspeccaoDados',JSON.stringify(d))}
-function carregarDadosLocal(){const s=localStorage.getItem('rumoInspeccaoDados');if(s){const d=JSON.parse(s);for(const id in d){const el=$(id);if(el){el.type==='checkbox'?el.checked=d[id]:el.value=d[id]}}if(d['tipo-defeito'])atualizarOpcoes();['amv-componente','mad-categoria','brita-categoria','sub-categoria','proc-area'].forEach(id=>{if(d[id]){const el=$(id);if(el)el.dispatchEvent(new Event('change'))}});if(d.sessao_ativa){hideEl('login-screen');showEl('main-layout','flex');if(innerWidth<=768){$('sidebar').classList.add('hidden');showEl('toggle-sidebar-btn','flex')}}}}
+function carregarDadosLocal(){const s=localStorage.getItem('rumoInspeccaoDados');if(s){const d=JSON.parse(s);for(const id in d){const el=$(id);if(el){el.type==='checkbox'?el.checked=d[id]:el.value=d[id]}}if(d['tipo-defeito'])atualizarOpcoes();['amv-componente','mad-categoria','brita-categoria','sub-categoria','proc-area'].forEach(id=>{if(d[id]){const el=$(id);if(el)el.dispatchEvent(new Event('change'))}});if(d.sessao_ativa){hideEl('login-screen');showEl('main-layout','flex');if(innerWidth<=768){$('sidebar').classList.add('hidden')}}}}
 
 document.addEventListener('DOMContentLoaded',()=>{carregarDadosLocal();document.querySelectorAll('input:not([type="password"]),select').forEach(i=>{i.addEventListener('change',salvarDadosLocal);i.addEventListener('input',salvarDadosLocal)});window.onclick=e=>{if(e.target===$('modal-ajuda-visual'))fecharAjuda()}})
 </script>
