@@ -7,56 +7,53 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Tela de Login -->
     <div id="login-screen">
         <div class="login-card">
             <img src="https://www.rumolog.com/wp-content/themes/rumo/assets/img/home/logo.svg" alt="Rumo" class="login-logo">
             <div class="login-subtitle">Coordenação de Qualidade e Homologação dos Materiais de Via Permanente</div>
-            <p class="bold" style="margin-bottom:20px">Guia do Inspetor Padrão</p>
-            <div class="form-group">
-                <input type="password" id="user-password" placeholder="Digite a senha de acesso">
-            </div>
+            <p class="bold" style="margin-bottom: 20px;">Guia do Inspetor Padrão</p>
+            <div class="form-group"><input type="password" id="user-password" placeholder="Digite a senha de acesso"></div>
             <button class="btn-analisar" onclick="validarAcesso()">ENTRAR</button>
             <p id="error-msg" class="error-msg">Senha incorreta</p>
         </div>
     </div>
 
-    <!-- Modal Ajuda Visual -->
     <div id="modal-ajuda-visual" class="modal-ajuda escondido">
         <div class="modal-ajuda-content">
             <span class="modal-ajuda-close" onclick="fecharAjuda()">&times;</span>
-            <h3 id="modal-titulo" style="color:var(--text-title);margin-bottom:5px">Título</h3>
-            <p id="modal-desc" style="font-size:.85rem;color:var(--text-muted)">Descrição do defeito.</p>
+            <h3 id="modal-titulo" style="color: var(--text-title); margin-bottom: 5px;">Título</h3>
+            <p id="modal-desc" style="font-size: 0.85rem; color: var(--text-muted);">Descrição do defeito.</p>
             <div class="modal-img-placeholder">📷 <br> [Espaço para foto]</div>
-            <button class="btn-analisar" style="padding:10px" onclick="fecharAjuda()">Entendi</button>
+            <button class="btn-analisar" style="padding: 10px;" onclick="fecharAjuda()">Entendi</button>
         </div>
     </div>
 
-    <!-- Modal Câmera -->
     <div id="camera-modal" class="escondido">
         <div class="camera-header">
             <button onclick="fecharCamera()">❌ Cancelar</button>
-            <span style="color:#fff;font-weight:bold;text-shadow:1px 1px 3px #000">Evidência de Inspeção</span>
+            <span style="color: white; font-weight: bold; text-shadow: 1px 1px 3px black;">Evidência de Inspeção</span>
         </div>
+        
         <div class="video-container">
             <video id="video-preview" autoplay playsinline></video>
             <img id="foto-capturada" class="escondido" alt="Laudo Final">
             <div class="overlay-texto" id="overlay-texto-visual"></div>
-            <canvas id="canvas-render" style="display:none"></canvas>
+            <canvas id="canvas-render" style="display:none;"></canvas>
         </div>
+
         <div class="camera-controls" id="controles-camera">
             <button class="btn-capturar" onclick="tirarFoto()"></button>
         </div>
+        
         <div class="camera-controls escondido" id="controles-pos-captura">
             <div class="botoes-pos-captura">
                 <button class="btn-secundario" onclick="retomarCamera()">🔄 Refazer</button>
-                <button class="btn-secundario" style="background:#0277bd" onclick="baixarFotoCarimbada()">⬇️ Salvar</button>
-                <button class="btn-secundario" style="background:#25D366" onclick="compartilharFotoCarimbada()">📲 Enviar</button>
+                <button class="btn-secundario" style="background:#0277bd;" onclick="baixarFotoCarimbada()">⬇️ Salvar</button>
+                <button class="btn-secundario" style="background:#25D366;" onclick="compartilharFotoCarimbada()">📲 Enviar</button>
             </div>
         </div>
     </div>
 
-    <!-- Layout Principal -->
     <div id="main-layout">
         <aside id="sidebar">
             <div class="sidebar-top">
@@ -64,22 +61,18 @@
                 <div class="sidebar-subtitle">Coordenação de Qualidade e Homologação dos Materiais de Via Permanente</div>
                 <div class="menu-header">Guia do Inspetor Padrão</div>
                 
-                <div class="menu-item" onclick="navegar(this,'sec-amv')">AMV & Componentes</div>
-                <div class="menu-item" onclick="navegar(this,'sec-brita')">Brita</div>
-                <div class="menu-item" onclick="navegar(this,'sec-concreto')">Dormente de Concreto</div>
-                <div class="menu-item" onclick="navegar(this,'sec-madeira')">Dormente de Madeira</div>
-                <div class="menu-item" onclick="navegar(this,'sec-sub')">Subcomponentes</div>
+                <div class="menu-item" onclick="navegar(this, 'sec-amv')">AMV & Componentes</div>
+                <div class="menu-item" onclick="navegar(this, 'sec-brita')">Brita</div>
+                <div class="menu-item" onclick="navegar(this, 'sec-concreto')">Dormente de Concreto</div>
+                <div class="menu-item" onclick="navegar(this, 'sec-madeira')">Dormente de Madeira</div>
+                <div class="menu-item" onclick="navegar(this, 'sec-sub')">Subcomponentes</div>
                 
-                <div style="border-top:1px solid rgba(255,255,255,.2);margin:15px 25px;box-shadow:0 1px 0 rgba(0,0,0,.5)"></div>
-                <div class="menu-item active" onclick="navegar(this,'sec-report')">📊 Report Semanal</div>
+                <div style="border-top: 1px solid rgba(255,255,255,0.2); margin: 15px 25px; box-shadow: 0 1px 0 rgba(0,0,0,0.5);"></div>
+                <div class="menu-item active" onclick="navegar(this, 'sec-report')">📊 Report Semanal</div>
             </div>
-            
             <div class="sidebar-bottom">
                 <button onclick="fazerLogout()" class="logout-btn">🚪 Sair do Sistema</button>
-                <button onclick="document.body.classList.toggle('dark')" class="dark-toggle">
-                    <span class="icon-moon">🌙</span>
-                    <span class="icon-sun">☀️</span>
-                </button>
+                <button onclick="document.body.classList.toggle('dark')" class="dark-toggle"><span class="icon-moon">🌙</span><span class="icon-sun">☀️</span></button>
                 <div class="sidebar-credit">Desenvolvido por Erwin Klein</div>
             </div>
         </aside>
@@ -87,7 +80,6 @@
         <main>
             <button id="toggle-sidebar-btn" onclick="toggleSidebar()">☰</button>
 
-            <!-- Report Semanal -->
             <section id="sec-report" class="content-section active">
                 <h1>Report Semanal <span class="proc-title">— Indicadores de Qualidade</span></h1>
                 <div class="card">
@@ -111,16 +103,15 @@
                                 <option value="concreto">Dormente de Concreto</option>
                                 <option value="madeira">Dormente de Madeira</option>
                                 <option value="lastro">Lastro / Brita</option>
-                                <option value="sub">Subcomponentes</option>
-                                <option value="rnc">RNC (Não Conformidades)</option>
+                                <option value="sub">Subcomponentes / RNCs</option>
                             </select>
                         </div>
                     </div>
-                    <div id="report-content" class="escondido" style="margin-top:30px"></div>
+
+                    <div id="report-content" class="escondido" style="margin-top: 30px;">
+                    </div>
                 </div>
             </section>
-
-            <!-- AMV -->
             <section id="sec-amv" class="content-section">
                 <h1>AMV (Aparelhos de Mudança de Via) <span class="proc-title">— Lote ETM-AMV</span></h1>
                 <div class="card">
@@ -138,84 +129,32 @@
                             <option value="batefica">Aparelho Talonável Bate-Fica</option>
                         </select>
                     </div>
-                    
-                    <div id="amv-inputs-agulha" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Medida Atual da Ponta da Agulha (mm): 
-                                <button class="btn-ajuda-visual" onclick="abrirAjuda('agulha')">?</button>
-                            </label>
-                            <input type="number" id="val-amv-ponta" step="0.1">
-                        </div>
-                    </div>
-                    
-                    <div id="amv-inputs-rolete" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Altura máx do rolete (mm):</label>
-                            <input type="number" id="val-amv-altura-rolete" step="0.1">
-                        </div>
-                    </div>
-                    
-                    <div id="amv-inputs-coxin" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Dureza constatada no coxin (Shore A):</label>
-                            <input type="number" id="val-amv-coxin" step="1">
-                        </div>
-                    </div>
-                    
-                    <div id="amv-inputs-jacare_canal" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Profundidade do Canal (mm): 
-                                <button class="btn-ajuda-visual" onclick="abrirAjuda('jacare_canal')">?</button>
-                            </label>
-                            <input type="number" id="val-amv-jacare-canal" step="0.1">
-                        </div>
-                    </div>
-                    
-                    <div id="amv-inputs-jacare_dureza" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Dureza Brinell na área de impacto (HB):</label>
-                            <input type="number" id="val-amv-jacare-dureza" step="1">
-                        </div>
-                    </div>
-                    
-                    <div id="amv-inputs-fixacao_concreto" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Pressão do Grampo Eclip-2009 (kgf):</label>
-                            <input type="number" id="val-amv-fixacao" step="1">
-                        </div>
-                    </div>
-                    
+
+                    <div id="amv-inputs-agulha" class="dimensoes-grid escondido"><div class="form-group"><label>Medida Atual da Ponta da Agulha (mm): <button class="btn-ajuda-visual" onclick="abrirAjuda('agulha')">?</button></label><input type="number" id="val-amv-ponta" step="0.1"></div></div>
+                    <div id="amv-inputs-rolete" class="dimensoes-grid escondido"><div class="form-group"><label>Altura máx do rolete (mm):</label><input type="number" id="val-amv-altura-rolete" step="0.1"></div></div>
+                    <div id="amv-inputs-coxin" class="dimensoes-grid escondido"><div class="form-group"><label>Dureza constatada no coxin (Shore A):</label><input type="number" id="val-amv-coxin" step="1"></div></div>
+                    <div id="amv-inputs-jacare_canal" class="dimensoes-grid escondido"><div class="form-group"><label>Profundidade do Canal (mm): <button class="btn-ajuda-visual" onclick="abrirAjuda('jacare_canal')">?</button></label><input type="number" id="val-amv-jacare-canal" step="0.1"></div></div>
+                    <div id="amv-inputs-jacare_dureza" class="dimensoes-grid escondido"><div class="form-group"><label>Dureza Brinell na área de impacto (HB):</label><input type="number" id="val-amv-jacare-dureza" step="1"></div></div>
+                    <div id="amv-inputs-fixacao_concreto" class="dimensoes-grid escondido"><div class="form-group"><label>Pressão do Grampo Eclip-2009 (kgf):</label><input type="number" id="val-amv-fixacao" step="1"></div></div>
                     <div id="amv-inputs-cilindro" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Pressão de travamento constatada (kgf):</label>
-                            <input type="number" id="val-amv-pressao" step="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Tempo de acionamento c/ 260kg (s):</label>
-                            <input type="number" id="val-amv-tempo" step="0.1">
-                        </div>
+                        <div class="form-group"><label>Pressão de travamento constatada (kgf):</label><input type="number" id="val-amv-pressao" step="1"></div>
+                        <div class="form-group"><label>Tempo de acionamento c/ 260kg (s):</label><input type="number" id="val-amv-tempo" step="0.1"></div>
                     </div>
-                    
-                    <div id="amv-inputs-batefica" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Deslocamento verificado das agulhas (mm):</label>
-                            <input type="number" id="val-amv-deslocamento" step="1">
-                        </div>
-                    </div>
-                    
+                    <div id="amv-inputs-batefica" class="dimensoes-grid escondido"><div class="form-group"><label>Deslocamento verificado das agulhas (mm):</label><input type="number" id="val-amv-deslocamento" step="1"></div></div>
+
                     <button class="btn-analisar escondido" id="btn-amv" onclick="analisarAMV()">VERIFICAR CONFORMIDADE</button>
                     
                     <div id="resultado-box-amv" class="resultado-box"></div>
                     
                     <div id="botoes-acao-amv" class="botoes-acao escondido">
-                        <button class="btn-action btn-cam" onclick="abrirCamera('resultado-box-amv','AMV')">📸 Registrar Foto com Laudo</button>
-                        <button class="btn-action btn-wpp" onclick="compartilharWhatsApp('resultado-box-amv','AMV')">💬 Enviar via WhatsApp</button>
+                        <button class="btn-cam" onclick="abrirCamera('resultado-box-amv', 'AMV')">📸 Registrar Foto com Laudo</button>
+                        <button class="btn-wpp" onclick="compartilharWhatsApp('resultado-box-amv', 'AMV')">💬 Enviar via WhatsApp</button>
                     </div>
+                    
                     <div class="aviso-normativo">Procedimentos sujeitos a alterações pela Engenharia Normativa da Rumo - Atualizados 14/04/2026</div>
                 </div>
             </section>
 
-            <!-- Brita -->
             <section id="sec-brita" class="content-section">
                 <h1>Brita para Lastro <span class="proc-title">— MAN-VP-T-ETM-ES-0006-05</span></h1>
                 <div class="card">
@@ -227,6 +166,7 @@
                             <option value="basalto">Basalto</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label>Categoria da Inspeção:</label>
                         <select id="brita-categoria" onchange="atualizarInterface('brita')">
@@ -237,23 +177,12 @@
                             <option value="laboratorio">Ensaios Físicos (Laboratório)</option>
                         </select>
                     </div>
-                    
-                    <div id="brita-check-visual" class="checkbox-group escondido">
-                        <input type="checkbox" id="brita-presenca-finos">
-                        <label for="brita-presenca-finos">Presença visível de argila, areia ou matéria orgânica?</label>
-                    </div>
-                    
-                    <div id="brita-inputs-lote" class="dimensoes-grid escondido">
-                        <div class="form-group">
-                            <label>Percentual de Não-Cúbicas (%): 
-                                <button class="btn-ajuda-visual" onclick="abrirAjuda('nao_cubica')">?</button>
-                            </label>
-                            <input type="number" id="val-brita-nao-cubicas" step="0.1">
-                        </div>
-                    </div>
-                    
+
+                    <div id="brita-check-visual" class="checkbox-group escondido"><input type="checkbox" id="brita-presenca-finos"><label for="brita-presenca-finos">Presença visível de argila, areia ou matéria orgânica?</label></div>
+                    <div id="brita-inputs-lote" class="dimensoes-grid escondido"><div class="form-group"><label>Percentual de Não-Cúbicas (%): <button class="btn-ajuda-visual" onclick="abrirAjuda('nao_cubica')">?</button></label><input type="number" id="val-brita-nao-cubicas" step="0.1"></div></div>
+
                     <div id="brita-inputs-granulometria" class="escondido">
-                        <p style="font-weight:bold;margin-bottom:10px;font-size:.9rem">Insira o percentual Retido Acumulado (%) PLANO 24 AREMA:</p>
+                        <p style="font-weight: bold; margin-bottom: 10px; font-size: 0.9rem;">Insira o percentual Retido Acumulado (%) PLANO 24 AREMA:</p>
                         <div class="dimensoes-grid">
                             <div class="form-group"><label>Peneira 3" (76.2 mm):</label><input type="number" id="val-brita-g3" step="0.1"></div>
                             <div class="form-group"><label>Peneira 2.1/2" (63.5 mm):</label><input type="number" id="val-brita-g250" step="0.1"></div>
@@ -262,7 +191,7 @@
                             <div class="form-group"><label>Peneira 1/2" (12.7 mm):</label><input type="number" id="val-brita-g050" step="0.1"></div>
                         </div>
                     </div>
-                    
+
                     <div id="brita-inputs-lab" class="escondido">
                         <div class="dimensoes-grid">
                             <div class="form-group"><label>Abrasão Los Angeles (%):</label><input type="number" id="val-brita-losangeles" step="0.1"></div>
@@ -270,19 +199,17 @@
                             <div class="form-group"><label>Torrões de Argila (%):</label><input type="number" id="val-brita-argila" step="0.1"></div>
                         </div>
                     </div>
-                    
+
                     <button class="btn-analisar escondido" id="btn-brita" onclick="analisarBrita()">VERIFICAR CONFORMIDADE</button>
                     
                     <div id="resultado-box-brita" class="resultado-box"></div>
-                    
                     <div id="botoes-acao-brita" class="botoes-acao escondido">
-                        <button class="btn-action btn-cam" onclick="abrirCamera('resultado-box-brita','Brita')">📸 Registrar Foto com Laudo</button>
-                        <button class="btn-action btn-wpp" onclick="compartilharWhatsApp('resultado-box-brita','Brita')">💬 Enviar via WhatsApp</button>
+                        <button class="btn-cam" onclick="abrirCamera('resultado-box-brita', 'Brita')">📸 Registrar Foto com Laudo</button>
+                        <button class="btn-wpp" onclick="compartilharWhatsApp('resultado-box-brita', 'Brita')">💬 Enviar via WhatsApp</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Dormente de Concreto -->
             <section id="sec-concreto" class="content-section">
                 <h1>Dormente de Concreto <span class="proc-title">— PO-SPE-160</span></h1>
                 <div class="card">
@@ -296,33 +223,29 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Localização: 
-                            <button class="btn-ajuda-visual" onclick="abrirAjuda('loc_dormente')">?</button>
-                        </label>
-                        <select id="localizacao" onchange="atualizarCampos()">
-                            <option value="">Selecione a região...</option>
-                        </select>
+                        <label>Localização: <button class="btn-ajuda-visual" onclick="abrirAjuda('loc_dormente')">?</button></label>
+                        <select id="localizacao" onchange="atualizarCampos()"><option value="">Selecione a região...</option></select>
                     </div>
-                    <div class="checkbox-group escondido" id="container-aco">
-                        <input type="checkbox" id="aco-exposto">
-                        <label for="aco-exposto">Exposição de Armadura / Aço?</label>
-                    </div>
+
+                    <div class="checkbox-group escondido" id="container-aco"><input type="checkbox" id="aco-exposto"><label for="aco-exposto">Exposição de Armadura / Aço?</label></div>
+
                     <div class="dimensoes-grid escondido" id="dimensoes-inputs">
                         <div class="form-group" id="div-profundidade"><label>Profundidade (mm):</label><input type="number" id="val-profundidade" step="0.1"></div>
                         <div class="form-group" id="div-comprimento"><label>Comprimento (mm):</label><input type="number" id="val-comprimento" step="0.1"></div>
                         <div class="form-group" id="div-largura"><label>Largura (mm):</label><input type="number" id="val-largura" step="0.1"></div>
                         <div class="form-group" id="div-espessura"><label>Espessura (mm):</label><input type="number" id="val-espessura" step="0.01"></div>
                     </div>
+
                     <button class="btn-analisar" onclick="analisarDefeito()">VERIFICAR CONFORMIDADE</button>
+                    
                     <div id="resultado-box-concreto" class="resultado-box"></div>
                     <div id="botoes-acao-concreto" class="botoes-acao escondido">
-                        <button class="btn-action btn-cam" onclick="abrirCamera('resultado-box-concreto','Concreto')">📸 Registrar Foto com Laudo</button>
-                        <button class="btn-action btn-wpp" onclick="compartilharWhatsApp('resultado-box-concreto','Concreto')">💬 Enviar via WhatsApp</button>
+                        <button class="btn-cam" onclick="abrirCamera('resultado-box-concreto', 'Concreto')">📸 Registrar Foto com Laudo</button>
+                        <button class="btn-wpp" onclick="compartilharWhatsApp('resultado-box-concreto', 'Concreto')">💬 Enviar via WhatsApp</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Dormente de Madeira -->
             <section id="sec-madeira" class="content-section">
                 <h1>Dormente de Madeira <span class="proc-title">— MAN-DM-T-MTE-DM-0001</span></h1>
                 <div class="card">
@@ -334,25 +257,17 @@
                             <option value="defeito">Análise de Defeitos e Conformidade</option>
                         </select>
                     </div>
-                    
+
                     <div id="mad-inputs-fisico" class="dimensoes-grid escondido">
-                        <div class="form-group"><label>Classe:</label>
-                            <select id="mad-classe">
-                                <option value="1">1ª Classe</option>
-                                <option value="2">2ª Classe</option>
-                            </select>
-                        </div>
+                        <div class="form-group"><label>Classe:</label><select id="mad-classe"><option value="1">1ª Classe</option><option value="2">2ª Classe</option></select></div>
                         <div class="form-group"><label>Umidade (%):</label><input type="number" id="val-mad-umidade" step="0.1"></div>
                         <div class="form-group"><label>Densidade (kg/m³):</label><input type="number" id="val-mad-densidade" step="1"></div>
                         <div class="form-group"><label>Retenção CCA (kg/m³):</label><input type="number" id="val-mad-retencao" step="0.1"></div>
                     </div>
-                    
+
                     <div id="mad-inputs-defeito" class="escondido">
-                        <!-- Todo o conteúdo de defeitos da madeira está aqui (mantido completo) -->
                         <div class="form-group">
-                            <label>Tipo de Defeito ou Medição: 
-                                <button class="btn-ajuda-visual" onclick="abrirAjuda('def_madeira')">?</button>
-                            </label>
+                            <label>Tipo de Defeito ou Medição: <button class="btn-ajuda-visual" onclick="abrirAjuda('def_madeira')">?</button></label>
                             <select id="mad-tipo-defeito" onchange="atualizarInterface('madeira_sub')">
                                 <option value="">Selecione...</option>
                                 <option value="dimensoes">📏 Dimensões Fora do Padrão</option>
@@ -368,20 +283,67 @@
                                 <option value="amarracao">❌ Falha na Amarração do Fardo</option>
                             </select>
                         </div>
-                        <!-- ... (o resto das divs de inputs da madeira está mantido exatamente como no original) ... -->
-                        <!-- Para manter a resposta em tamanho razoável, o conteúdo completo das inputs de madeira está idêntico ao original. -->
+                        
+                        <div id="mad-check-fixacao" class="checkbox-group escondido"><input type="checkbox" id="mad-zona-fixacao"><label for="mad-zona-fixacao">O defeito está na Zona de Fixação?</label></div>
+                        
+                        <div id="mad-dims-dimensoes" class="escondido">
+                            <div class="form-group"><label>Tipo do Dormente:</label>
+                                <select id="val-mad-dim-bitola">
+                                    <option value="normal">Métrica / Larga</option>
+                                    <option value="amv">AMV</option>
+                                </select>
+                            </div>
+                            <div class="dimensoes-grid">
+                                <div class="form-group"><label>Comp. Aferido (m):</label><input type="number" id="val-mad-dim-comp" step="0.01"></div>
+                                <div class="form-group"><label>Largura Aferida (cm):</label><input type="number" id="val-mad-dim-larg" step="0.1"></div>
+                                <div class="form-group"><label>Altura Aferida (cm):</label><input type="number" id="val-mad-dim-alt" step="0.1"></div>
+                            </div>
+                            <p style="font-size:0.8rem; color:var(--text-muted);">Insira as medidas nominais (referência da Nota Fiscal):</p>
+                            <div class="dimensoes-grid" style="background: rgba(0,0,0,0.02);">
+                                <div class="form-group"><label>Comp. Nominal (m):</label><input type="number" id="val-mad-nom-comp" step="0.01"></div>
+                                <div class="form-group"><label>Largura Nominal (cm):</label><input type="number" id="val-mad-nom-larg" step="0.1"></div>
+                                <div class="form-group"><label>Altura Nominal (cm):</label><input type="number" id="val-mad-nom-alt" step="0.1"></div>
+                            </div>
+                        </div>
+
+                        <div id="mad-dims-esmoado" class="dimensoes-grid escondido">
+                            <div class="form-group"><label>Comp. Dormente (m):</label>
+                                <select id="val-mad-esmoado-comp">
+                                    <option value="2.00">2,00 m</option>
+                                    <option value="2.20">2,20 m ou 2,80 m</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Face Reta (Altura) (cm):</label><input type="number" id="val-mad-esmoado-reta" step="0.1"></div>
+                            <div class="form-group"><label>Face Superior (Topo) (cm):</label><input type="number" id="val-mad-esmoado-topo" step="0.1"></div>
+                        </div>
+
+                        <div id="mad-dims-racha" class="dimensoes-grid escondido">
+                            <div class="form-group"><label>Comprimento (cm):</label><input type="number" id="val-mad-comp-racha" step="0.1"></div>
+                            <div class="form-group"><label>Abertura (mm):</label><input type="number" id="val-mad-abert-racha" step="0.1"></div>
+                            <div class="form-group escondido" id="mad-div-prof-racha"><label>Profundidade (cm):</label><input type="number" id="val-mad-prof-racha" step="0.1"></div>
+                        </div>
+
+                        <div id="mad-dims-furos" class="dimensoes-grid escondido">
+                            <div class="form-group"><label>Diâmetro Furo (cm):</label><input type="number" id="val-mad-diam-furo" step="0.1"></div>
+                            <div class="form-group"><label>Profundidade (cm):</label><input type="number" id="val-mad-prof-furo" step="0.1"></div>
+                        </div>
+
+                        <div id="mad-dims-empenamento" class="dimensoes-grid escondido">
+                            <div class="form-group"><label>Comp. Dormente (m):</label><select id="val-mad-comp-dormente"><option value="2.00">2,00 m</option><option value="2.20">2,20 m</option><option value="2.40">2,40 m</option><option value="2.60">2,60 m</option><option value="2.80">2,80 m</option><option value="3.00">3,00 m</option><option value="3.20">3,20 m</option><option value="4.00">4,00 m</option></select></div>
+                            <div class="form-group"><label>Flecha Constatada (cm):</label><input type="number" id="val-mad-flecha" step="0.1"></div>
+                        </div>
                     </div>
-                    
+
                     <button class="btn-analisar escondido" id="btn-madeira" onclick="analisarMadeira()">VERIFICAR CONFORMIDADE</button>
+                    
                     <div id="resultado-box-madeira" class="resultado-box"></div>
                     <div id="botoes-acao-madeira" class="botoes-acao escondido">
-                        <button class="btn-action btn-cam" onclick="abrirCamera('resultado-box-madeira','Madeira')">📸 Registrar Foto com Laudo</button>
-                        <button class="btn-action btn-wpp" onclick="compartilharWhatsApp('resultado-box-madeira','Madeira')">💬 Enviar via WhatsApp</button>
+                        <button class="btn-cam" onclick="abrirCamera('resultado-box-madeira', 'Madeira')">📸 Registrar Foto com Laudo</button>
+                        <button class="btn-wpp" onclick="compartilharWhatsApp('resultado-box-madeira', 'Madeira')">💬 Enviar via WhatsApp</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Subcomponentes -->
             <section id="sec-sub" class="content-section">
                 <h1>Subcomponentes Metálicos/Plásticos <span class="proc-title">— Padrão ENG-DVP</span></h1>
                 <div class="card">
@@ -405,12 +367,15 @@
                             <option value="pal_branca_almofada">Palmilha Branca Almofada 7552 (SAP:109105)</option>
                         </select>
                     </div>
+
                     <div id="sub-inputs-container" class="dimensoes-grid escondido"></div>
+
                     <button class="btn-analisar escondido" id="btn-sub" onclick="analisarSub()">VERIFICAR CONFORMIDADE</button>
+                    
                     <div id="resultado-box-sub" class="resultado-box"></div>
                     <div id="botoes-acao-sub" class="botoes-acao escondido">
-                        <button class="btn-action btn-cam" onclick="abrirCamera('resultado-box-sub','Subcomponentes')">📸 Registrar Foto com Laudo</button>
-                        <button class="btn-action btn-wpp" onclick="compartilharWhatsApp('resultado-box-sub','Subcomponentes')">💬 Enviar via WhatsApp</button>
+                        <button class="btn-cam" onclick="abrirCamera('resultado-box-sub', 'Subcomponentes')">📸 Registrar Foto com Laudo</button>
+                        <button class="btn-wpp" onclick="compartilharWhatsApp('resultado-box-sub', 'Subcomponentes')">💬 Enviar via WhatsApp</button>
                     </div>
                 </div>
             </section>
