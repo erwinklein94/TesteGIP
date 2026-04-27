@@ -1942,7 +1942,7 @@ function registrarPWA(){
             navigator.serviceWorker.register('./rumo-sw.js').then(()=>{
                 const st=$('offline-status');if(st)st.textContent='PWA ativo: após o primeiro carregamento publicado, o guia pode abrir com cache offline.';
             }).catch(()=>{
-                const st=$('offline-status');if(st)st.textContent='Modo local ativo. Para offline completo, publique junto o arquivo rumo-sw.js.';
+                const st=$('offline-status');if(st)st.textContent='.';
             });
         }
     }catch(e){}
